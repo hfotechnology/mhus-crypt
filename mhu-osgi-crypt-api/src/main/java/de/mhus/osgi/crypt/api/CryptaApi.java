@@ -16,6 +16,7 @@
 package de.mhus.osgi.crypt.api;
 
 import de.mhus.lib.core.crypt.pem.PemBlock;
+import de.mhus.lib.core.crypt.pem.PemBlockList;
 import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.errors.MException;
@@ -38,5 +39,9 @@ public interface CryptaApi {
 	SignerProvider getSigner(String signer) throws MException;
 
 	boolean validate(PemPub key, String text, PemBlock sign) throws MException;
+
+	void processPemBlocks(VaultProcessContext context, PemBlockList list) throws MException;
+
+	Object processPemBlock(VaultProcessContext context, PemBlock block) throws MException;
 		
 }

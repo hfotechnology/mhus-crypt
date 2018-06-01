@@ -20,6 +20,7 @@ import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemPair;
 import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
+import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 
 public interface CipherProvider {
@@ -36,6 +37,10 @@ public interface CipherProvider {
 	PemBlock encode(PemPub key, String content) throws MException;
 
 	String decode(PemPriv key, PemBlock encoded, String passphrase) throws MException;
+	
+	default String decode(PemPriv key, PemBlock encoded, SecureString passphrase) throws MException {
+		return decode(key, encoded, passphrase.value());
+	};
 	
 	String getName();
 
