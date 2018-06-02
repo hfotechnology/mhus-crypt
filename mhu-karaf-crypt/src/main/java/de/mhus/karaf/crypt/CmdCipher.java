@@ -41,7 +41,7 @@ import de.mhus.lib.core.vault.MVault;
 import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.MutableVaultSource;
 import de.mhus.lib.core.vault.VaultSource;
-import de.mhus.osgi.crypt.api.CryptaApi;
+import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.services.MOsgi;
 
@@ -79,7 +79,7 @@ public class CmdCipher extends MLog implements Action {
 			return null;
 		}
 
-		CipherProvider prov = MApi.lookup(CryptaApi.class).getCipher(cipher);
+		CipherProvider prov = MApi.lookup(CryptApi.class).getCipher(cipher);
 
 		switch (cmd) {
 		case "encode": { 

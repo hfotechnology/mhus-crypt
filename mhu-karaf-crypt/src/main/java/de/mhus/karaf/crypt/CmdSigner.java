@@ -41,7 +41,7 @@ import de.mhus.lib.core.vault.MVault;
 import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.MutableVaultSource;
 import de.mhus.lib.core.vault.VaultSource;
-import de.mhus.osgi.crypt.api.CryptaApi;
+import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
 import de.mhus.osgi.services.MOsgi;
 
@@ -79,7 +79,7 @@ public class CmdSigner extends MLog implements Action {
 			return null;
 		}
 
-		SignerProvider prov = MApi.lookup(CryptaApi.class).getSigner(signer);
+		SignerProvider prov = MApi.lookup(CryptApi.class).getSigner(signer);
 
 		switch (cmd) {
 		case "create": {

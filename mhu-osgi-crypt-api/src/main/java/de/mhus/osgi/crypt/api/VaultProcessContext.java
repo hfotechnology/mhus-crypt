@@ -8,13 +8,13 @@ import de.mhus.lib.errors.MException;
 
 public interface VaultProcessContext {
 
-	void errorKeyNotFound(PemBlock block) throws CryptaException;
+	void errorKeyNotFound(PemBlock block) throws CryptException;
 
 	PemPriv getPrivateKey(String privId) throws MException;
 
-	String getPrivateIdForPublicKeyId(String pubId) throws CryptaException;
+	String getPrivateIdForPublicKeyId(String pubId) throws CryptException;
 
-	SecureString getPassphrase(String privId, PemBlock block) throws CryptaException;
+	SecureString getPassphrase(String privId, PemBlock block) throws CryptException;
 
 	void foundSecret(PemBlock block, SecureString sec);
 

@@ -8,7 +8,7 @@ import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
-import de.mhus.osgi.crypt.api.CryptaException;
+import de.mhus.osgi.crypt.api.CryptException;
 import de.mhus.osgi.crypt.api.VaultProcessContext;
 
 public class SimpleVaultProcessContext implements VaultProcessContext {
@@ -20,8 +20,8 @@ public class SimpleVaultProcessContext implements VaultProcessContext {
 	private PemBlock lastValidated;
 
 	@Override
-	public void errorKeyNotFound(PemBlock block) throws CryptaException {
-		throw new CryptaException("key not found", block);
+	public void errorKeyNotFound(PemBlock block) throws CryptException {
+		throw new CryptException("key not found", block);
 	}
 
 	@Override
@@ -32,14 +32,14 @@ public class SimpleVaultProcessContext implements VaultProcessContext {
 	}
 
 	@Override
-	public String getPrivateIdForPublicKeyId(String pubId) throws CryptaException {
+	public String getPrivateIdForPublicKeyId(String pubId) throws CryptException {
 		PemBlock pub = keys.get(pubId);
 		if (pub == null) return null;
 		return pub.getString(PemBlock.PRIV_ID, null);
 	}
 
 	@Override
-	public SecureString getPassphrase(String privId, PemBlock block) throws CryptaException {
+	public SecureString getPassphrase(String privId, PemBlock block) throws CryptException {
 		return passphrases.get(privId);
 	}
 

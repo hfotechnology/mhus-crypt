@@ -24,7 +24,7 @@ import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.currency.CurrencyProvider;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
 
-public interface CryptaApi {
+public interface CryptApi {
 
 	PemBlock sign(PemPriv key, String text, String passphrase) throws MException;
 

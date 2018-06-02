@@ -26,8 +26,8 @@ import de.mhus.lib.core.crypt.pem.PemUtil;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
-import de.mhus.osgi.crypt.api.CryptaApi;
-import de.mhus.osgi.crypt.api.CryptaException;
+import de.mhus.osgi.crypt.api.CryptApi;
+import de.mhus.osgi.crypt.api.CryptException;
 import de.mhus.osgi.crypt.api.NotDecryptedException;
 import de.mhus.osgi.crypt.api.SignNotValidException;
 import de.mhus.osgi.crypt.api.VaultProcessContext;
@@ -37,7 +37,7 @@ import de.mhus.osgi.crypt.api.signer.SignerProvider;
 import de.mhus.osgi.services.MOsgi;
 
 @Component
-public class CryptaApiImpl extends MLog implements CryptaApi {
+public class CryptApiImpl extends MLog implements CryptApi {
 
 	
 	private static final String DEFAULT_SIGN = "BCFIPS-1";
@@ -110,7 +110,7 @@ public class CryptaApiImpl extends MLog implements CryptaApi {
 			} else
 			if (PemUtil.isSign(block) && block.getBoolean(PemBlock.EMBEDDED, false)) {
 				if (res == null)
-					throw new CryptaException("sign key not found",block);
+					throw new CryptException("sign key not found",block);
 				PemPub key = (PemPub) res;
 				// validate against the rest of the block list
 				String text = list.toString(index+1,Integer.MAX_VALUE);
