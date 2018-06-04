@@ -133,31 +133,27 @@ public class CryptApiImpl extends MLog implements CryptApi {
 			String keyId = null;
 			boolean isSymetric = block.getBoolean(PemBlock.SYMMETRIC, block.isProperty(PemBlock.KEY_ID) );
 			if (isSymetric) {
-				keyId = block.getString(PemBlock.KEY_ID, null);
+				keyId = block.getString(PemBlock.KEY_IDENT, null);
 				if (keyId == null) {
 					log().d("key id not found", block);
 					context.errorKeyNotFound(block);
 					return null;
 				}
 			} else {
-				keyId = block.getString(PemBlock.PRIV_ID, null);
-				if (keyId == null) {
-					String pubId = block.getString(PemBlock.PUB_ID, null);
-					if (pubId == null) {
-						log().d("public key not found", block);
-						context.errorKeyNotFound(block);
-						return null;
-					}
-					keyId =  context.getPrivateIdForPublicKeyId(pubId);
-					if (keyId == null) {
-						log().d("private key not found for public key", block);
-						context.errorKeyNotFound(block);
-						return null;
+				keyId = block.getString(PemBlock.KEY_IDENT, null);
+				if (keyId != null) {
+					keyKey = context.getPrivateKey(keyId);
+					if (keyKey == null) {
+						keyId =  context.getPrivateIdForPublicKeyId(keyId);
+						if (keyId == null) {
+							log().d("private key not found for public key", block);
+							context.errorKeyNotFound(block);
+							return null;
+						}
+						keyKey = context.getPrivateKey(keyId);
 					}
 				}
 			}
-			
-			keyKey = context.getPrivateKey(keyId);
 			if (keyKey == null) {
 				log().d("private key not found", block);
 				context.errorKeyNotFound(block);
@@ -173,22 +169,20 @@ public class CryptApiImpl extends MLog implements CryptApi {
 		} else
 		if (PemUtil.isSign(block)) {
 			// no content to validate - not possible in this moment, but will check the key
-			String keyId = block.getString(PemBlock.PUB_ID, null);
-			if (keyId == null) {
-				String privId = block.getString(PemBlock.PRIV_ID, null);
-				if (privId == null) {
-					log().d("private key not found", block);
-					context.errorKeyNotFound(block);
-					return null;
-				}
-				keyId =  context.getPrivateIdForPublicKeyId(privId);
+			String keyId = block.getString(PemBlock.KEY_IDENT, null);
+			PemPub keyKey = null;
+			if (keyId != null) {
+				keyKey = context.getPublicKey(keyId);
+				if (keyKey == null)
+				keyId =  context.getPrivateIdForPublicKeyId(keyId);
 				if (keyId == null) {
 					log().d("public key not found for private key", block);
 					context.errorKeyNotFound(block);
 					return null;
 				}
+				keyKey = context.getPublicKey(keyId);
+				
 			}
-			PemPub keyKey = context.getPublicKey(keyId);
 			if (keyKey == null) {
 				log().d("public key not found", block);
 				context.errorKeyNotFound(block);

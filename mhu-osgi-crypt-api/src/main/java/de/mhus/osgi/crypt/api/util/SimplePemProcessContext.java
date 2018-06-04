@@ -54,14 +54,14 @@ public class SimplePemProcessContext implements PemProcessContext {
 
 	@Override
 	public void foundPublicKey(PemBlock block) {
-		String id = block.getString(PemBlock.KEY_IDENT, null);
+		String id = block.getString(PemBlock.IDENT, null);
 		if (id == null) return;
 		keys.put(id, block);
 	}
 
 	@Override
 	public void foundPrivateKey(PemBlock block) {
-		String id = block.getString(PemBlock.KEY_IDENT, null);
+		String id = block.getString(PemBlock.IDENT, null);
 		if (id == null) return;
 		keys.put(id, block);
 	}
