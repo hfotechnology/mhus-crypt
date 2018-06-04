@@ -40,8 +40,8 @@ public interface CryptApi {
 
 	boolean validate(PemPub key, String text, PemBlock sign) throws MException;
 
-	void processPemBlocks(VaultProcessContext context, PemBlockList list) throws MException;
+	void processPemBlocks(PemProcessContext context, PemBlockList list) throws MException;
 
-	Object processPemBlock(VaultProcessContext context, PemBlock block) throws MException;
+	Object processPemBlock(PemProcessContext context, PemBlock block) throws MException;
 		
 }

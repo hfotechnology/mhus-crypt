@@ -45,10 +45,10 @@ import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.errors.MException;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 
-@Component(properties="cipher=RSA-1") // Default RSA
+@Component(properties="cipher=RSA-JCE") // Default RSA - Java Cryptography Extension
 public class JavaRsaCipher extends MLog implements CipherProvider {
 
-	private final String NAME = "RSA-1";
+	private final String NAME = "RSA-JCE";
 
 	@Override
 	public PemBlock encode(PemPub key, String content) throws MException {

@@ -6,7 +6,7 @@ import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 
-public interface VaultProcessContext {
+public interface PemProcessContext {
 
 	void errorKeyNotFound(PemBlock block) throws CryptException;
 

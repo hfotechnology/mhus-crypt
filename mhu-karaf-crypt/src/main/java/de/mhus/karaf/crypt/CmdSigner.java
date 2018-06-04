@@ -156,8 +156,11 @@ public class CmdSigner extends MLog implements Action {
 				p.setString("passphrase", passphrase);
 			String text = Lorem.create(p.getInt("lorem", 1));
 			
+			System.out.println(text);
+			
 			PemPair keys = prov.createKeys(p);
-			System.out.println(keys);
+			System.out.println(keys.getPublic());
+			System.out.println(new PemKey((PemKey)keys.getPrivate(), false));
 			
 			PemBlock sign = prov.sign(keys.getPrivate(), text, passphrase);
 			System.out.println(sign);

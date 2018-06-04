@@ -1,0 +1,165 @@
+karaf@root()> cipher * list
+AES-JCE
+RSA-JCE
+RSA-BC
+
+
+==========================================================================================
+
+
+karaf@root()> cipher RSA-JCE create length=2048
+-----START PRIVATE KEY-----
+Ident: ada728ed-3be5-4ecb-9ab7-1693627f5c35
+Format: PKCS#8
+Length: 2048
+PubKeyIdent: 66264660-057f-4bb5-afe7-02551620bddb
+Method: RSA-JCE
+Created: Mon Jun 04 22:41:32 CEST 2018
+
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQ
+CWAHEzAwrW8Q65PyKl6rAKkebwjq15fGPzQ6Z8ICBX3X55Rbp7
+7HmXjZnpL7PcWjNTzfPjFRXSTHd3SkTK9Q3l2NeavfvrD4y/eE
+tZFxPr5+d/w0URrSbrZNm/DP3dFezcOqZGsMEwmXcwAJAEfywf
+TZa0XPZ4whHDz9Yaw2Urm54PHs1L6WJ6fEPw8sUHAfHPgTBDv5
+gLWHZ+mtsWV9b34c6CxoSbgcN8prRMIcoEam4KKleNEx1B1r3A
+qOAuIiGho6De24U4RdzeUBEA9h0gDpeB6VW8bYI8nqZmdHTc1D
+OYcxvfO2TIseZzFX2UoOidKdKLYMbqttFSHlzjGxNJAgMBAAEC
+ggEAV6ZkfxFdCSIMn3Rj852CRnrg/lnwxhdIdEJoiwlevNkBaS
+20fWs91a/5aofkSnMuoN6sj1mnyZ3DBSKRtiKhf1hJC/PNu5n3
+fX52UNWqX2PAIyjgOCb8ofnpPrkBsml4YWun85CfIp3aRmNdxD
+LnflchI71ajE+if8/3ZOYePO8peyIl3fKswbfyti7wP86+o590
+qQ0HYjfjZnvJ5gN/VY3x6Kby3WGogtdTjzqDek9FUTggousCTG
+oBkOQ0EPZenDUygAEd14tA87U1qPbwN9fgOuZGE4hxHGt/JAQc
+nJz+zci06CUqnUGWEY8slsBHeC3REMaRAO1BYMyulBKLTQKBgQ
+DPNjcsnWDdNrF8sO2Upkzix8GKvzSn220imPcydljsoboHuiBp
+f3ijtNFIrT810vgojvPgQLOJxO54Qe6Cwl2+5zC+211yTewsq9
+XH0c5kJUTGs1D9TFST6ASaAkchqqfaR/xN2fUQ4AS/tXFLSnk8
+xJ0Is5D+j55KYensM9rddwKBgQC5Ud1cDbCbAGqgOPTlFkAYjc
+mveZTcyuGTshclL9ix+bUX2R8bTRmCeUsXws86WUHEl57tCjwf
+2VFmKIpfvVIQBK+2DVXU3+2JMNa6wqC0m/ETatUQotwBuyoxME
+KUM8YIcrAF9hKZ7JeoNQhsP6dfUEaCCvDJpkC/lg7Vtz7FPwKB
+gQCrT2FSK1K30M3wDr581PhfzVI/iVDZLdoObnSAbcOa7yJD3S
+eK0O5GOemEsma98wtjTLxnPFayofOdzLSJunOSrsRoJigdpjqJ
+vA7kQprlxMIVnI5qu755Aas8QIHaXaKkHjuDiZzINMz4SeO+oX
+WWPd6uIPbQ3p+5UzX4J+7chQKBgA8wCV8w9AdP+m0VHeTkdO5O
+OHg8E5ogumn7T3BJwo2bdF72+Vioce3CeQgCfC9A/2XYMzsj+p
+d1nPktW2HLRz1u1OOrphwjGfmDWiXGK5uBqDk6KSoK3tL5ftS3
+Ks2wjItGsuxaJV4eCLPNXNpaQSJLluuzb9Zm3KmW57JWKTvLAo
+GBAMp/2OJaNhNVJbyF1NTAhExGvOGZIzqDtUaKibzqDeHk58cn
+IixoGqKBl07w+ZYTAVeXnGjGOm+tLYewVo4t/GwuXxY3uodY16
+nXWMx5jTzhIjYKWH9nK+2I8Cr0EPx+IKE6EUz3JzCfiB9RPQlM
+lXoLaYA0tRBpkmGZIJodQMsl
+
+-----END PRIVATE KEY-----
+
+-----START PUBLIC KEY-----
+PrivKeyIdent: ada728ed-3be5-4ecb-9ab7-1693627f5c35
+Ident: 66264660-057f-4bb5-afe7-02551620bddb
+Format: X.509
+Length: 2048
+Method: RSA-JCE
+Created: Mon Jun 04 22:41:32 CEST 2018
+
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlgBxMw
+MK1vEOuT8ipeqwCpHm8I6teXxj80OmfCAgV91+eUW6e+x5l42Z
+6S+z3FozU83z4xUV0kx3d0pEyvUN5djXmr376w+Mv3hLWRcT6+
+fnf8NFEa0m62TZvwz93RXs3DqmRrDBMJl3MACQBH8sH02WtFz2
+eMIRw8/WGsNlK5ueDx7NS+lienxD8PLFBwHxz4EwQ7+YC1h2fp
+rbFlfW9+HOgsaEm4HDfKa0TCHKBGpuCipXjRMdQda9wKjgLiIh
+oaOg3tuFOEXc3lARAPYdIA6XgelVvG2CPJ6mZnR03NQzmHMb3z
+tkyLHmcxV9lKDonSnSi2DG6rbRUh5c4xsTSQIDAQAB
+
+-----END PUBLIC KEY-----
+
+Private: RSA-JCE:MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCWAHEzAwrW8Q65PyKl6rAKkebwjq15fGPzQ6Z8ICBX3X55Rbp77HmXjZnpL7PcWjNTzfPjFRXSTHd3SkTK9Q3l2NeavfvrD4y/eEtZFxPr5+d/w0URrSbrZNm/DP3dFezcOqZGsMEwmXcwAJAEfywfTZa0XPZ4whHDz9Yaw2Urm54PHs1L6WJ6fEPw8sUHAfHPgTBDv5gLWHZ+mtsWV9b34c6CxoSbgcN8prRMIcoEam4KKleNEx1B1r3AqOAuIiGho6De24U4RdzeUBEA9h0gDpeB6VW8bYI8nqZmdHTc1DOYcxvfO2TIseZzFX2UoOidKdKLYMbqttFSHlzjGxNJAgMBAAECggEAV6ZkfxFdCSIMn3Rj852CRnrg/lnwxhdIdEJoiwlevNkBaS20fWs91a/5aofkSnMuoN6sj1mnyZ3DBSKRtiKhf1hJC/PNu5n3fX52UNWqX2PAIyjgOCb8ofnpPrkBsml4YWun85CfIp3aRmNdxDLnflchI71ajE+if8/3ZOYePO8peyIl3fKswbfyti7wP86+o590qQ0HYjfjZnvJ5gN/VY3x6Kby3WGogtdTjzqDek9FUTggousCTGoBkOQ0EPZenDUygAEd14tA87U1qPbwN9fgOuZGE4hxHGt/JAQcnJz+zci06CUqnUGWEY8slsBHeC3REMaRAO1BYMyulBKLTQKBgQDPNjcsnWDdNrF8sO2Upkzix8GKvzSn220imPcydljsoboHuiBpf3ijtNFIrT810vgojvPgQLOJxO54Qe6Cwl2+5zC+211yTewsq9XH0c5kJUTGs1D9TFST6ASaAkchqqfaR/xN2fUQ4AS/tXFLSnk8xJ0Is5D+j55KYensM9rddwKBgQC5Ud1cDbCbAGqgOPTlFkAYjcmveZTcyuGTshclL9ix+bUX2R8bTRmCeUsXws86WUHEl57tCjwf2VFmKIpfvVIQBK+2DVXU3+2JMNa6wqC0m/ETatUQotwBuyoxMEKUM8YIcrAF9hKZ7JeoNQhsP6dfUEaCCvDJpkC/lg7Vtz7FPwKBgQCrT2FSK1K30M3wDr581PhfzVI/iVDZLdoObnSAbcOa7yJD3SeK0O5GOemEsma98wtjTLxnPFayofOdzLSJunOSrsRoJigdpjqJvA7kQprlxMIVnI5qu755Aas8QIHaXaKkHjuDiZzINMz4SeO+oXWWPd6uIPbQ3p+5UzX4J+7chQKBgA8wCV8w9AdP+m0VHeTkdO5OOHg8E5ogumn7T3BJwo2bdF72+Vioce3CeQgCfC9A/2XYMzsj+pd1nPktW2HLRz1u1OOrphwjGfmDWiXGK5uBqDk6KSoK3tL5ftS3Ks2wjItGsuxaJV4eCLPNXNpaQSJLluuzb9Zm3KmW57JWKTvLAoGBAMp/2OJaNhNVJbyF1NTAhExGvOGZIzqDtUaKibzqDeHk58cnIixoGqKBl07w+ZYTAVeXnGjGOm+tLYewVo4t/GwuXxY3uodY16nXWMx5jTzhIjYKWH9nK+2I8Cr0EPx+IKE6EUz3JzCfiB9RPQlMlXoLaYA0tRBpkmGZIJodQMsl
+
+Public : RSA-JCE:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlgBxMwMK1vEOuT8ipeqwCpHm8I6teXxj80OmfCAgV91+eUW6e+x5l42Z6S+z3FozU83z4xUV0kx3d0pEyvUN5djXmr376w+Mv3hLWRcT6+fnf8NFEa0m62TZvwz93RXs3DqmRrDBMJl3MACQBH8sH02WtFz2eMIRw8/WGsNlK5ueDx7NS+lienxD8PLFBwHxz4EwQ7+YC1h2fprbFlfW9+HOgsaEm4HDfKa0TCHKBGpuCipXjRMdQda9wKjgLiIhoaOg3tuFOEXc3lARAPYdIA6XgelVvG2CPJ6mZnR03NQzmHMb3ztkyLHmcxV9lKDonSnSi2DG6rbRUh5c4xsTSQIDAQAB
+[Ident=ada728ed-3be5-4ecb-9ab7-1693627f5c35, Format=PKCS#8, Length=2048, PubKeyIdent=66264660-057f-4bb5-afe7-02551620bddb, Method=RSA-JCE, Created=Mon Jun 04 22:41:32 CEST 2018]
+[PrivKeyIdent=ada728ed-3be5-4ecb-9ab7-1693627f5c35, Ident=66264660-057f-4bb5-afe7-02551620bddb, Format=X.509, Length=2048, Method=RSA-JCE, Created=Mon Jun 04 22:41:32 CEST 2018]
+
+karaf@root()> 
+
+
+==========================================================================================
+
+
+
+karaf@root()> cipher AES-JCE create length=128
+-----START PRIVATE KEY-----
+Ident: 5929238a-ede3-43eb-8634-399dfc475bd3
+Length: 128
+Method: AES-JCE
+Created: Mon Jun 04 22:42:00 CEST 2018
+
+RSNuTiFFMW9uV3d3OXRTSg==
+
+-----END PRIVATE KEY-----
+
+-----START PRIVATE KEY-----
+Ident: 5929238a-ede3-43eb-8634-399dfc475bd3
+Length: 128
+Method: AES-JCE
+Created: Mon Jun 04 22:42:00 CEST 2018
+
+?
+
+-----END PRIVATE KEY-----
+
+Private: AES-JCE:RSNuTiFFMW9uV3d3OXRTSg==
+
+Public : AES-JCE:RSNuTiFFMW9uV3d3OXRTSg==
+[Ident=5929238a-ede3-43eb-8634-399dfc475bd3, Length=128, Method=AES-JCE, Created=Mon Jun 04 22:42:00 CEST 2018]
+[Ident=5929238a-ede3-43eb-8634-399dfc475bd3, Length=128, Method=AES-JCE, Created=Mon Jun 04 22:42:00 CEST 2018]
+
+
+==========================================================================================
+
+
+karaf@root()> signer * list
+DSA-JCE
+ECC-BC
+
+
+==========================================================================================
+
+
+karaf@root()> signer ECC-JCE create
+-----START PRIVATE KEY-----
+Ident: fcac6a13-8bc0-4d5e-9be9-11cc32bccad1
+StdName: prime192v1
+Format: PKCS#8
+PubKeyIdent: cd945647-43b6-4f5e-92bc-ac99d6968211
+Method: ECC-BC
+Created: Mon Jun 04 22:50:13 CEST 2018
+
+MHsCAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQEEYTBfAgEBBBjFWJ
+dojWK2VR0iQXQKnwm/JBrE/+7E8GagCgYIKoZIzj0DAQGhNAMy
+AAQOPA5QyljjI13PoCZ4h5fFVbiA/oTUcKGPadAYzvFKokhNVb
+kONis6kFEXNY5X6Zo=
+
+-----END PRIVATE KEY-----
+
+-----START PUBLIC KEY-----
+PrivKeyIdent: fcac6a13-8bc0-4d5e-9be9-11cc32bccad1
+Ident: cd945647-43b6-4f5e-92bc-ac99d6968211
+Format: X.509
+StdName: prime192v1
+Method: ECC-BC
+Created: Mon Jun 04 22:50:13 CEST 2018
+
+MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAEDjwOUMpY4yNdz6
+AmeIeXxVW4gP6E1HChj2nQGM7xSqJITVW5DjYrOpBRFzWOV+ma
+
+-----END PUBLIC KEY-----
+
+Private: ECC-BC:MHsCAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQEEYTBfAgEBBBjFWJdojWK2VR0iQXQKnwm/JBrE/+7E8GagCgYIKoZIzj0DAQGhNAMyAAQOPA5QyljjI13PoCZ4h5fFVbiA/oTUcKGPadAYzvFKokhNVbkONis6kFEXNY5X6Zo=
+
+Public : ECC-BC:MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAEDjwOUMpY4yNdz6AmeIeXxVW4gP6E1HChj2nQGM7xSqJITVW5DjYrOpBRFzWOV+ma
+[Ident=fcac6a13-8bc0-4d5e-9be9-11cc32bccad1, Format=PKCS#8, StdName=prime192v1, PubKeyIdent=cd945647-43b6-4f5e-92bc-ac99d6968211, Method=ECC-BC, Created=Mon Jun 04 22:50:13 CEST 2018]
+[PrivKeyIdent=fcac6a13-8bc0-4d5e-9be9-11cc32bccad1, Ident=cd945647-43b6-4f5e-92bc-ac99d6968211, Format=X.509, StdName=prime192v1, Method=ECC-BC, Created=Mon Jun 04 22:50:13 CEST 2018]
+
+
+
+
+
+

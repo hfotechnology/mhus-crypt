@@ -9,9 +9,9 @@ import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 import de.mhus.osgi.crypt.api.CryptException;
-import de.mhus.osgi.crypt.api.VaultProcessContext;
+import de.mhus.osgi.crypt.api.PemProcessContext;
 
-public class SimpleVaultProcessContext implements VaultProcessContext {
+public class SimplePemProcessContext implements PemProcessContext {
 
 	protected SecureString lastSecret;
 	protected HashMap<String, PemBlock> keys = new HashMap<>();

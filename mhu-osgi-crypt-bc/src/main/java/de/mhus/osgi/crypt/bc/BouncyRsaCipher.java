@@ -50,10 +50,10 @@ import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 
 // https://bouncycastle-pgp-cookbook.blogspot.de/2013/01/generating-rsa-keys.html
 
-@Component(properties="cipher=RSA-2",immediate=true) // Bouncycastle RSA
+@Component(properties="cipher=RSA-BC",immediate=true) // Bouncycastle RSA
 public class BouncyRsaCipher extends MLog implements CipherProvider {
 
-	private final String NAME = "RSA-2";
+	private final String NAME = "RSA-BC";
 	
 	@Activate
 	public void doActivate(ComponentContext ctx) {

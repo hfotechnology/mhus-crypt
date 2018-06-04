@@ -155,7 +155,8 @@ public class CmdCipher extends MLog implements Action {
 			String text = Lorem.create(p.getInt("lorem", 1));
 			System.out.println(text);
 			PemPair keys = prov.createKeys(p);
-			System.out.println(keys);
+			System.out.println(keys.getPublic());
+			System.out.println(new PemKey((PemKey)keys.getPrivate(), false));
 			PemBlock encoded = prov.encode(keys.getPublic(), text);
 			System.out.println(encoded);
 			String decoded = prov.decode(keys.getPrivate(), encoded, passphrase);

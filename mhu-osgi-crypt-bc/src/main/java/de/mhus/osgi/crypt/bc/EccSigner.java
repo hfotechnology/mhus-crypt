@@ -49,8 +49,10 @@ import de.mhus.osgi.crypt.api.signer.SignerProvider;
 
 // http://bouncycastle.org/wiki/display/JA1/Elliptic+Curve+Key+Pair+Generation+and+Key+Factories
 
-@Component(properties="signer=ECC-1")
+@Component(properties="signer=ECC-BC")
 public class EccSigner extends MLog implements SignerProvider {
+
+	private static String NAME = "ECC-BC";
 
 	@Activate
 	public void doActivate(ComponentContext ctx) {
@@ -109,7 +111,7 @@ public class EccSigner extends MLog implements SignerProvider {
 
 	@Override
 	public String getName() {
-		return "ECC-1";
+		return NAME;
 	}
 
 	@Override

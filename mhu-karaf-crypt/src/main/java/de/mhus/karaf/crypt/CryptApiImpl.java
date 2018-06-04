@@ -30,7 +30,7 @@ import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.CryptException;
 import de.mhus.osgi.crypt.api.NotDecryptedException;
 import de.mhus.osgi.crypt.api.SignNotValidException;
-import de.mhus.osgi.crypt.api.VaultProcessContext;
+import de.mhus.osgi.crypt.api.PemProcessContext;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.currency.CurrencyProvider;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
@@ -94,7 +94,7 @@ public class CryptApiImpl extends MLog implements CryptApi {
 	}
 
 	@Override
-	public void processPemBlocks(VaultProcessContext context, PemBlockList list) throws MException {
+	public void processPemBlocks(PemProcessContext context, PemBlockList list) throws MException {
 		// iterate all blocks
 		int index = 0;
 		while (index < list.size()) {
@@ -126,7 +126,7 @@ public class CryptApiImpl extends MLog implements CryptApi {
 	}
 
 	@Override
-	public Object processPemBlock(VaultProcessContext context, PemBlock block) throws MException {
+	public Object processPemBlock(PemProcessContext context, PemBlock block) throws MException {
 		if (PemUtil.isCipher(block)) {
 			// process encrypted content
 			PemPriv keyKey = null;
