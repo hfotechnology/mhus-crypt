@@ -39,7 +39,11 @@ public interface CipherProvider {
 	String decode(PemPriv key, PemBlock encoded, String passphrase) throws MException;
 	
 	default String decode(PemPriv key, PemBlock encoded, SecureString passphrase) throws MException {
-		return decode(key, encoded, passphrase.value());
+		return decode(key, encoded, passphrase == null ? null : passphrase.value());
+	};
+	
+	default String decode(PemPriv key, PemBlock encoded) throws MException {
+		return decode(key, encoded, (String)null);
 	};
 	
 	String getName();

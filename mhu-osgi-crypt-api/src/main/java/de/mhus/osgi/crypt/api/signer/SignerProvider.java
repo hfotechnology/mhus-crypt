@@ -20,6 +20,7 @@ import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemPair;
 import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
+import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 
 public interface SignerProvider {
@@ -35,6 +36,14 @@ public interface SignerProvider {
 	 */
 	PemBlock sign(PemPriv key, String text, String passphrase) throws MException;
 
+	default PemBlock sign(PemPriv key, String text, SecureString passphrase) throws MException {
+		return sign(key, text, passphrase == null ? null : passphrase.value());
+	}
+
+	default PemBlock sign(PemPriv key, String text) throws MException {
+		return sign(key, text, (String)null);
+	}
+	
 	boolean validate(PemPub key, String text, PemBlock sign) throws MException;
 
 	String getName();

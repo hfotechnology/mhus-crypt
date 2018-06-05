@@ -15,11 +15,8 @@
  */
 package de.mhus.karaf.crypt;
 
-import java.io.UnsupportedEncodingException;
-
 import aQute.bnd.annotation.component.Component;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockList;
@@ -105,7 +102,7 @@ public class CryptApiImpl extends MLog implements CryptApi {
 					throw new NotDecryptedException(block);
 				PemBlockList insert = new PemBlockList(((SecureString)res).value());
 				log().t("insert",insert);
-				list.addAll(index, insert);
+				list.addAll(index+1, insert);
 			} else
 			if (PemUtil.isSign(block) && block.getBoolean(PemBlock.EMBEDDED, false)) {
 				if (res == null)
@@ -126,13 +123,7 @@ public class CryptApiImpl extends MLog implements CryptApi {
 				PemPub key = (PemPub) res;
 				// validate against the next block
 				PemBlock next = list.get(index+1);
-				String stringEncoding = next.getString(PemBlock.STRING_ENCODING, MString.CHARSET_UTF_8);
-				String text = null;
-				try {
-					text = new String(next.getBytesBlock(),stringEncoding).trim();
-				} catch (UnsupportedEncodingException e) {
-					throw new MException(e);
-				}
+				String text = next.toString();
 				SignerProvider api = getSigner(block.getString(PemBlock.METHOD));
 				boolean valid = api.validate(key, text, block);
 				if (!valid)
