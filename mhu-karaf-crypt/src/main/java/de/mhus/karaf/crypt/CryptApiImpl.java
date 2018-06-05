@@ -15,9 +15,12 @@
  */
 package de.mhus.karaf.crypt;
 
+import java.io.UnsupportedEncodingException;
+
 import aQute.bnd.annotation.component.Component;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockList;
 import de.mhus.lib.core.crypt.pem.PemPriv;
@@ -29,8 +32,8 @@ import de.mhus.lib.errors.NotFoundException;
 import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.CryptException;
 import de.mhus.osgi.crypt.api.NotDecryptedException;
-import de.mhus.osgi.crypt.api.SignNotValidException;
 import de.mhus.osgi.crypt.api.PemProcessContext;
+import de.mhus.osgi.crypt.api.SignNotValidException;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.currency.CurrencyProvider;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
@@ -40,10 +43,8 @@ import de.mhus.osgi.services.MOsgi;
 public class CryptApiImpl extends MLog implements CryptApi {
 
 	
-	private static final String DEFAULT_SIGN = "BCFIPS-1";
-	private static final String DEFAUL_CIPHER = "BCFIPS-1";
-	private CipherProvider cipher;
-	private SignerProvider signer;
+	private static final CfgString DEFAULT_SIGN = new CfgString(CryptApi.class, "defaultSigner", "DSA-JCE");
+	private static final CfgString DEFAUL_CIPHER = new CfgString(CryptApi.class, "defaultCipher", "RSA-JCE");
 
 	@Override
 	public CipherProvider getCipher(String cipher) throws NotFoundException {
@@ -53,8 +54,7 @@ public class CryptApiImpl extends MLog implements CryptApi {
 
 	@Override
 	public CipherProvider getDefaultCipher() throws NotFoundException {
-		if (cipher == null)
-			cipher = getCipher(DEFAUL_CIPHER);
+		CipherProvider cipher = getCipher(DEFAUL_CIPHER.value());
 		return cipher;
 	}
 
@@ -72,8 +72,7 @@ public class CryptApiImpl extends MLog implements CryptApi {
 	
 	@Override
 	public SignerProvider getDefaultSigner() throws NotFoundException {
-		if (signer == null)
-			signer = getSigner(DEFAULT_SIGN);
+		SignerProvider signer = getSigner(DEFAULT_SIGN.value());
 		return signer;
 	}
 
@@ -115,7 +114,26 @@ public class CryptApiImpl extends MLog implements CryptApi {
 				// validate against the rest of the block list
 				String text = list.toString(index+1,Integer.MAX_VALUE);
 				
-				SignerProvider api = MApi.lookup(SignerProvider.class);
+				SignerProvider api = getSigner(block.getString(PemBlock.METHOD));
+				boolean valid = api.validate(key, text, block);
+				if (!valid)
+					throw new SignNotValidException(block);
+				context.foundValidated(block);
+			} else
+			if (PemUtil.isSign(block) && block.getString(PemBlock.EMBEDDED, "").equals("next")) {
+				if (res == null)
+					throw new CryptException("sign key not found",block);
+				PemPub key = (PemPub) res;
+				// validate against the next block
+				PemBlock next = list.get(index+1);
+				String stringEncoding = next.getString(PemBlock.STRING_ENCODING, MString.CHARSET_UTF_8);
+				String text = null;
+				try {
+					text = new String(next.getBytesBlock(),stringEncoding).trim();
+				} catch (UnsupportedEncodingException e) {
+					throw new MException(e);
+				}
+				SignerProvider api = getSigner(block.getString(PemBlock.METHOD));
 				boolean valid = api.validate(key, text, block);
 				if (!valid)
 					throw new SignNotValidException(block);
@@ -133,34 +151,37 @@ public class CryptApiImpl extends MLog implements CryptApi {
 			String keyId = null;
 			boolean isSymetric = block.getBoolean(PemBlock.SYMMETRIC, block.isProperty(PemBlock.KEY_ID) );
 			if (isSymetric) {
-				keyId = block.getString(PemBlock.KEY_IDENT, null);
+				keyId = block.getString(PemBlock.KEY_ID, null);
 				if (keyId == null) {
 					log().d("key id not found", block);
 					context.errorKeyNotFound(block);
 					return null;
 				}
 			} else {
-				keyId = block.getString(PemBlock.KEY_IDENT, null);
-				if (keyId != null) {
-					keyKey = context.getPrivateKey(keyId);
-					if (keyKey == null) {
-						keyId =  context.getPrivateIdForPublicKeyId(keyId);
-						if (keyId == null) {
-							log().d("private key not found for public key", block);
-							context.errorKeyNotFound(block);
-							return null;
-						}
-						keyKey = context.getPrivateKey(keyId);
+				keyId = block.getString(PemBlock.PRIV_ID, null);
+				if (keyId == null) {
+					String pubId = block.getString(PemBlock.PUB_ID, null);
+					if (pubId == null) {
+						log().d("public key not found", block);
+						context.errorKeyNotFound(block);
+						return null;
+					}
+					keyId =  context.getPrivateIdForPublicKeyId(pubId);
+					if (keyId == null) {
+						log().d("private key not found for public key", block);
+						context.errorKeyNotFound(block);
+						return null;
 					}
 				}
 			}
+			keyKey = context.getPrivateKey(keyId);
 			if (keyKey == null) {
 				log().d("private key not found", block);
 				context.errorKeyNotFound(block);
 				return null;
 			}
 		
-			CipherProvider api = MApi.lookup(CipherProvider.class);
+			CipherProvider api = getCipher(block.getString(PemBlock.METHOD));
 			String decoded = api.decode(keyKey, block, context.getPassphrase(keyId,block));
 			SecureString sec = new SecureString(decoded);
 			decoded = "";
@@ -169,20 +190,22 @@ public class CryptApiImpl extends MLog implements CryptApi {
 		} else
 		if (PemUtil.isSign(block)) {
 			// no content to validate - not possible in this moment, but will check the key
-			String keyId = block.getString(PemBlock.KEY_IDENT, null);
-			PemPub keyKey = null;
-			if (keyId != null) {
-				keyKey = context.getPublicKey(keyId);
-				if (keyKey == null)
-				keyId =  context.getPrivateIdForPublicKeyId(keyId);
+			String keyId = block.getString(PemBlock.PUB_ID, null);
+			if (keyId == null) {
+				String privId = block.getString(PemBlock.PRIV_ID, null);
+				if (privId == null) {
+					log().d("private key not found", block);
+					context.errorKeyNotFound(block);
+					return null;
+				}
+				keyId =  context.getPrivateIdForPublicKeyId(privId);
 				if (keyId == null) {
 					log().d("public key not found for private key", block);
 					context.errorKeyNotFound(block);
 					return null;
 				}
-				keyKey = context.getPublicKey(keyId);
-				
 			}
+			PemPub keyKey = context.getPublicKey(keyId);
 			if (keyKey == null) {
 				log().d("public key not found", block);
 				context.errorKeyNotFound(block);
@@ -200,6 +223,8 @@ public class CryptApiImpl extends MLog implements CryptApi {
 		} else
 		if (PemUtil.isHash(block)) {
 			context.foundHash(block);
+		} else
+		if (PemUtil.isContent(block)) {
 		} else
 			log().w("unknown block type",block.getName());
 		return null;

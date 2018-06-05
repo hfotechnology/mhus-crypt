@@ -23,7 +23,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Date;
 import java.util.UUID;
 
 import javax.crypto.Cipher;
@@ -47,6 +46,7 @@ import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.errors.MException;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
+import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 // https://bouncycastle-pgp-cookbook.blogspot.de/2013/01/generating-rsa-keys.html
 
@@ -87,11 +87,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
 			}
 			
 			PemBlockModel out = new PemBlockModel(PemBlock.BLOCK_CIPHER, os.toByteArray());
-			out.set(PemBlock.METHOD, getName());
-			out.set(PemBlock.STRING_ENCODING, stringEncoding);
-			if (key.isProperty(PemBlock.IDENT))
-				out.set(PemBlock.KEY_IDENT, key.getString(PemBlock.IDENT));
-			out.set(PemBlock.CREATED, new Date());
+			CryptUtil.prepareCipherOut(key, out, getName(), stringEncoding);
 			
 			return out;
 

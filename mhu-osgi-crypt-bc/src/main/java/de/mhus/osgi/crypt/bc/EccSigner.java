@@ -24,7 +24,6 @@ import java.security.Signature;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Date;
 import java.util.UUID;
 
 import org.osgi.service.component.ComponentContext;
@@ -46,6 +45,7 @@ import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.errors.MException;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
+import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 // http://bouncycastle.org/wiki/display/JA1/Elliptic+Curve+Key+Pair+Generation+and+Key+Factories
 
@@ -76,10 +76,8 @@ public class EccSigner extends MLog implements SignerProvider {
 			
 			byte[] realSig = dsa.sign();
 			
-			PemBlockModel out = new PemBlockModel(PemBlock.BLOCK_SIGN, realSig).set(PemBlock.METHOD,getName());
-			if (key.isProperty(PemBlock.IDENT))
-				out.set(PemBlock.KEY_IDENT, key.getProperty(PemBlock.IDENT));
-			out.set(PemBlock.CREATED, new Date());
+			PemBlockModel out = new PemBlockModel(PemBlock.BLOCK_SIGN, realSig);
+			CryptUtil.prepareSignOut(key, out, getName());
 			
 			return out;
 		} catch (Exception e) {

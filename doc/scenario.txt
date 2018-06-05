@@ -1,0 +1,88 @@
+karaf@root()> signer -i ECC-BC create
+-----START PRIVATE KEY-----
+Ident: 5ac4da74-f853-4911-8138-0d27f55ce8a2
+StdName: prime192v1
+Format: PKCS#8
+PublicKey: a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2
+Method: ECC-BC
+Created: Tue Jun 05 04:20:30 CEST 2018
+
+MHsCAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQEEYTBfAgEBBBhwIc
+4xfysxkxHMk9gC9VHfFX72ZvZyCm+gCgYIKoZIzj0DAQGhNAMy
+AAQJ1VO//h+Qp3VaoncowKYSuquA2kGBIhgaxfwKUFpOhOeuaq
+kJCJhAa5NF13W1fDI=
+
+-----END PRIVATE KEY-----
+
+-----START PUBLIC KEY-----
+Ident: a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2
+Format: X.509
+StdName: prime192v1
+PrivateKey: 5ac4da74-f853-4911-8138-0d27f55ce8a2
+Method: ECC-BC
+Created: Tue Jun 05 04:20:30 CEST 2018
+
+MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAECdVTv/4fkKd1Wq
+J3KMCmErqrgNpBgSIYGsX8ClBaToTnrmqpCQiYQGuTRdd1tXwy
+
+-----END PUBLIC KEY-----
+
+Private: ECC-BC:MHsCAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQEEYTBfAgEBBBhwIc4xfysxkxHMk9gC9VHfFX72ZvZyCm+gCgYIKoZIzj0DAQGhNAMyAAQJ1VO//h+Qp3VaoncowKYSuquA2kGBIhgaxfwKUFpOhOeuaqkJCJhAa5NF13W1fDI=
+
+Public : ECC-BC:MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAECdVTv/4fkKd1WqJ3KMCmErqrgNpBgSIYGsX8ClBaToTnrmqpCQiYQGuTRdd1tXwy
+IMPORTED!
+[Ident=5ac4da74-f853-4911-8138-0d27f55ce8a2, Format=PKCS#8, StdName=prime192v1, PublicKey=a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2, Method=ECC-BC, Created=Tue Jun 05 04:20:30 CEST 2018]
+[Ident=a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2, Format=X.509, StdName=prime192v1, PrivateKey=5ac4da74-f853-4911-8138-0d27f55ce8a2, Method=ECC-BC, Created=Tue Jun 05 04:20:30 CEST 2018]
+
+karaf@root()> vault list
+Source                                        | Id                                                                         | Type                                                         | Description                                       
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+default                                       | 5ac4da74-f853-4911-8138-0d27f55ce8a2                                       | rsa.cipher.private.key                                       |                                                   
+default                                       | a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2                                       | rsa.cipher.public.key                                        |                                                   
+karaf@root()> vault save
+OK
+karaf@root()> 
+karaf@root()> vault get 5ac4da74-f853-4911-8138-0d27f55ce8a2       
+Id         : 5ac4da74-f853-4911-8138-0d27f55ce8a2
+Type       : rsa.cipher.private.key
+Description: 
+ Value
+-------
+-----START PRIVATE KEY-----
+Ident: 5ac4da74-f853-4911-8138-0d27f55ce8a2
+StdName: prime192v1
+Format: PKCS#8
+PublicKey: a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2
+Method: ECC-BC
+Created: Tue Jun 05 04:20:30 CEST 2018
+
+MHsCAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQEEYTBfAgEBBBhwIc
+4xfysxkxHMk9gC9VHfFX72ZvZyCm+gCgYIKoZIzj0DAQGhNAMy
+AAQJ1VO//h+Qp3VaoncowKYSuquA2kGBIhgaxfwKUFpOhOeuaq
+kJCJhAa5NF13W1fDI=
+
+-----END PRIVATE KEY-----
+
+-------
+karaf@root()> 
+
+karaf@root()> signer ECC-BC sign 5ac4da74-f853-4911-8138-0d27f55ce8a2 Hallo
+-----START SIGNATURE-----
+PrivateKey: 5ac4da74-f853-4911-8138-0d27f55ce8a2
+PublicKey: a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2
+Method: ECC-BC
+Created: Tue Jun 05 04:24:44 CEST 2018
+
+MDYCGQD6EEN+UYfU1mkf0S2A7JN+9ZIq2MIBh98CGQDmBRg20X
+G/xJN4/VcQwE4AFssJB2BRF1g=
+
+-----END SIGNATURE-----
+
+PrivateKey          5ac4da74-f853-4911-8138-0d27f55ce8a2
+PublicKey           a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2
+Method              ECC-BC
+Created             Tue Jun 05 04:24:44 CEST 2018
+
+
+
+

@@ -121,5 +121,19 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>de.mhus.osgi</groupId>
+			<artifactId>mhu-osgi-crypt-bc</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<artifactId>bcprov-jdk16</artifactId>
+			<groupId>org.bouncycastle</groupId>
+			<version>1.46</version>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 </project>

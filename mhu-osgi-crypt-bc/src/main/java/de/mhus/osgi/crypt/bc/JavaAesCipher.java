@@ -1,6 +1,5 @@
 package de.mhus.osgi.crypt.bc;
 
-import java.util.Date;
 import java.util.UUID;
 
 import javax.crypto.Cipher;
@@ -8,8 +7,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import aQute.bnd.annotation.component.Component;
 import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.crypt.MRandom;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
 import de.mhus.lib.core.crypt.pem.PemKey;
@@ -19,6 +19,7 @@ import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.errors.MException;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
+import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 @Component(properties="cipher=AES-JCE") // Default Symmetric AES - Java Cryptography Extension
 public class JavaAesCipher extends MLog implements CipherProvider {
@@ -37,11 +38,7 @@ public class JavaAesCipher extends MLog implements CipherProvider {
 			byte[] encryptedData = c.doFinal(dataToSend);
 	
 			PemBlockModel out = new PemBlockModel(PemBlock.BLOCK_CIPHER, encryptedData);
-			out.set(PemBlock.METHOD, getName());
-			out.set(PemBlock.STRING_ENCODING, stringEncoding);
-			if (key.isProperty(PemBlock.IDENT))
-				out.set(PemBlock.KEY_IDENT, key.getString(PemBlock.IDENT));
-			out.set(PemBlock.CREATED, new Date());
+			CryptUtil.prepareSymmetricCipherOut(key, out, getName(), stringEncoding);
 			
 			return out;
 		} catch (Throwable t) {
@@ -76,11 +73,14 @@ public class JavaAesCipher extends MLog implements CipherProvider {
 	public PemPair createKeys(IProperties properties) throws MException {
 		int length = properties.getInt("length", 256);
 		length = length / 8 * 8;
-		String passphrase = MPassword.generate(length / 8, length / 8, true, true, true);
+		byte[] key = new byte[length/8];
+		MRandom random = MApi.lookup(MRandom.class);
+		for (int i = 0; i < key.length; i++)
+			key[i] = random.getByte();
 		
 		UUID privId = UUID.randomUUID();
 
-		PemKey xpriv = new PemKey(PemBlock.BLOCK_PRIV, passphrase.getBytes(), true )
+		PemKey xpriv = new PemKey(PemBlock.BLOCK_PRIV, key, true )
 				.set(PemBlock.METHOD, getName())
 				.set(PemBlock.LENGTH, length)
 				.set(PemBlock.IDENT, privId);
