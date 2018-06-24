@@ -2,6 +2,7 @@ package de.mhus.karaf.crypt.test;
 
 import de.mhus.karaf.crypt.CryptApiImpl;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.crypt.BouncyUtil;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockList;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
@@ -13,7 +14,6 @@ import de.mhus.lib.errors.NotFoundException;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
 import de.mhus.osgi.crypt.api.util.SimplePemProcessContext;
-import de.mhus.osgi.crypt.bc.BouncyUtil;
 import de.mhus.osgi.crypt.bc.EccSigner;
 import de.mhus.osgi.crypt.bc.JavaRsaCipher;
 import junit.framework.TestCase;
