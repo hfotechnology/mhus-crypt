@@ -20,11 +20,13 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import de.mhus.lib.core.util.SecureString;
+
 public class CAddress implements Externalizable {
 
 	protected String currency;
 	protected String address;
-	protected String privKey;
+	protected SecureString privKey;
 
 	public CAddress() {
 	}
@@ -34,12 +36,18 @@ public class CAddress implements Externalizable {
 		this.currency = currency.toString();
 	}
 	
-	public CAddress(CCurrency currency, String addr, String privKey) {
+	public CAddress(CCurrency currency, String addr, SecureString privKey) {
 		this.address = addr;
 		this.privKey = privKey;
 		this.currency = currency.toString();
 	}
 
+	public CAddress(CCurrency currency, String addr, String privKey) {
+		this.address = addr;
+		this.privKey = new SecureString(privKey);
+		this.currency = currency.toString();
+	}
+	
 	public CAddress(String currency, String addr) {
 		this.address = addr;
 		this.currency = currency.toUpperCase();
@@ -50,7 +58,7 @@ public class CAddress implements Externalizable {
 	 * 
 	 * @return the private key
 	 */
-	public final String getPrivate() {
+	public final SecureString getPrivate() {
 		return privKey;
 	}
 
@@ -99,7 +107,7 @@ public class CAddress implements Externalizable {
 	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		address = (String) in.readObject();
-		privKey = (String) in.readObject();
+		privKey = (SecureString)in.readObject();
 	}
 
 }
