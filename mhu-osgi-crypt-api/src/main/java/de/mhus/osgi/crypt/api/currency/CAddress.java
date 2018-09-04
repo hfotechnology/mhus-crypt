@@ -110,4 +110,8 @@ public class CAddress implements Externalizable {
 		privKey = (SecureString)in.readObject();
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+	
 }

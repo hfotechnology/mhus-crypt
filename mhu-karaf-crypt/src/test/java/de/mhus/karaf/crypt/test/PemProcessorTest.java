@@ -23,7 +23,7 @@ public class PemProcessorTest extends TestCase {
 	final String content = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
 
 	final String pubKeySign =
-	"-----START PUBLIC KEY-----\n"+
+	"-----BEGIN PUBLIC KEY-----\n"+
 	"PrivateKey: cb0b626c-d0a7-4715-8c08-77a75ee9dc14\n"+
 	"Ident: 881b7fe7-3bc3-4cd0-ab21-ea52e9d04174\n"+
 	"Format: X.509\n"+
@@ -36,7 +36,7 @@ public class PemProcessorTest extends TestCase {
 	"-----END PUBLIC KEY-----\n";
 
 	final String privKeySign =
-	"-----START PRIVATE KEY-----\n"+
+	"-----BEGIN PRIVATE KEY-----\n"+
 	"Ident: cb0b626c-d0a7-4715-8c08-77a75ee9dc14\n"+
 	"StdName: prime192v1\n"+
 	"Format: PKCS#8\n"+
@@ -51,22 +51,22 @@ public class PemProcessorTest extends TestCase {
 	"-----END PRIVATE KEY-----\n";
 
 	final String signature =
-	"-----START SIGNATURE-----\n"+
+	"-----BEGIN SIGNATURE-----\n"+
 	"PrivateKey: cb0b626c-d0a7-4715-8c08-77a75ee9dc14\n"+
 	"PublicKey: 881b7fe7-3bc3-4cd0-ab21-ea52e9d04174\n"+
 	"Method: ECC-BC\n"+
 	"Embedded: next\n"+
 	"Created: Tue Jun 05 22:06:04 CEST 2018\n"+
 	"\n"+
-	"MDUCGQDhooTUN9PFaHvmoRJROcp17JCf96W9i9wCGG6ZyOz2HL\n"+
-	"WA4YPR3+dOtPup095HbN5Brw==\n"+
+	"MDYCGQCOpzpQuaNQk7p6/rEeKduOt9IzQmneXdsCGQD63pg/AJ\n"+
+	"F4C9VzDj44wWvROeqkSbDic/o=\n"+
 	"\n"+
 	"-----END SIGNATURE-----\n";
 		
 	final String contentBlock = new PemBlockModel(PemBlock.BLOCK_CONTENT,content.getBytes()).toString();
 	
 	final String privKeyCipher =
-	"-----START PRIVATE KEY-----\n"+
+	"-----BEGIN PRIVATE KEY-----\n"+
 	"Ident: 5fe815c6-954d-4dbf-b581-4dc6e05dc17c\n"+
 	"Format: PKCS#8\n"+
 	"Length: 1024\n"+
@@ -95,7 +95,7 @@ public class PemProcessorTest extends TestCase {
 	"-----END PRIVATE KEY-----\n";
 
 	final String pubKeyCipher =
-	"-----START PUBLIC KEY-----\n"+
+	"-----BEGIN PUBLIC KEY-----\n"+
 	"Ident: 12657d2c-b73a-4be0-a5a2-037d835697cb\n"+
 	"Format: X.509\n"+
 	"PrivateKey: 5fe815c6-954d-4dbf-b581-4dc6e05dc17c\n"+
@@ -112,7 +112,7 @@ public class PemProcessorTest extends TestCase {
 	"-----END PUBLIC KEY-----\n";
 		
 	final String cipherBlock =
-	"-----START CIPHER-----\n"+
+	"-----BEGIN CIPHER-----\n"+
 	"PrivateKey: 5fe815c6-954d-4dbf-b581-4dc6e05dc17c\n"+
 	"PublicKey: 12657d2c-b73a-4be0-a5a2-037d835697cb\n"+
 	"Encoding: utf-8\n"+
@@ -120,17 +120,17 @@ public class PemProcessorTest extends TestCase {
 	"Embedded: true\n"+
 	"Created: Tue Jun 05 22:27:22 CEST 2018\n"+
 	"\n"+
-	"cL4o53iB3Va6J5ZF/tNxRNZnnueDEV1mVdQsVeYdG5L89FjpW0\n"+
-	"UHCNU6SURaJIRGVkm/TUkyyv64z2Ytvx3CBYCGWDAMGKANC1RS\n"+
-	"jIe2BKn7FsEwi88kN730DPm3i9azjrup+1G/0fkyyPKoWr2n8D\n"+
-	"oVKuLdJG5Afeny02XZ/YERO2KQZjW5GKWLUWP5eYE8h2F/hsMr\n"+
-	"e2JEeN2JKdtBMlHcIMttZRBCl7XbURek153RR/lnbIimCwmj+p\n"+
-	"HtkjmlQNJrCmCaV4eCi77JZD+makJY3aQALIjE0/2jVIwrgRNV\n"+
-	"QuKK81CS/0t+21gDohL61hi7W6tjdhLtIgJq5+YhdSsJfakWTP\n"+
-	"m8OCxJPrU3Hw8AiyqZgKiDxAWOnmrzSfrko8DGQ4f1degxMqag\n"+
-	"HgDK+jSDY0RMlBvQhD+/9Rm94YbEy1Z2MpXuxtQWZldh6X+wb6\n"+
-	"aCA9PGjocdO4ajY/Hjuoj5EEHedvVjAM9aNEWyd6yNiZPa3a6o\n"+
-	"lHCQfYtTN+vD\n"+
+	"Y6pGraTQaDa2CHiSosf3S+rnnUT1QM7q5pScU4e96+IBcKB0s7\n"+
+	"r16fedCEQMraYTi1XLcL78shq+OQZ28UAhZUc3ZtAwfdaZ97PB\n"+
+	"8bMJuhekhNr57yZ4cj+eLhtq70SzpHUL9ONuP2KNMgjH/sl5tv\n"+
+	"6zlCTgIT8FqeUyTNtAzmqG1LqjGpQjn9n4xggHpefAWB5Qzrlu\n"+
+	"8boiZcIP+kS0L9Tc2/HXBMoqHf/vHWLI8ynHPJYU/6SoS5Ka30\n"+
+	"p0cb9GHwEMZCkb393AcaaUXKd2c9Df9FE+uaUb0/FU99QalmoD\n"+
+	"ZAU8Y519BPVTB0gNWcRHrkxy8stAS2Mh8sAGLXcB60Zr0ZujdJ\n"+
+	"TkOM9nY/j5S/y1jNTfnL6DAjZ2x6639G4rRcoOUC0uEGmVYhZ7\n"+
+	"KW5sJ8LLbDVuATWDWFo4T/ZOLRRtr4s2Q6fPXUV+UuN5GPHJOB\n"+
+	"oW5+aO1RIVB9LGHHSQ7xsU888x/oukaWdGyx1EzkrpT94h60It\n"+
+	"wNkvX1pcaulf\n"+
 	"\n"+
 	"-----END CIPHER-----\n";
 
