@@ -53,6 +53,12 @@ public class CAddress implements Externalizable {
 		this.currency = currency.toUpperCase();
 	}
 
+	public CAddress(String curAddr) {
+		int p = curAddr.indexOf(':');
+		this.address = curAddr.substring(p+1);
+		this.currency = curAddr.substring(0, p).toUpperCase();
+	}
+
 	/**
 	 * Return private address or null if unknown.
 	 * 
