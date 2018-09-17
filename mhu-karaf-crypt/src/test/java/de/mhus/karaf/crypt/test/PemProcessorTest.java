@@ -2,7 +2,7 @@ package de.mhus.karaf.crypt.test;
 
 import de.mhus.karaf.crypt.CryptApiImpl;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.crypt.BouncyUtil;
+import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockList;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
@@ -137,7 +137,7 @@ public class PemProcessorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
-		BouncyUtil.init();
+		MBouncy.init();
 	}
 	
 	public void testCreateCipher() throws ParseException, MException {

@@ -35,7 +35,7 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.crypt.Blowfish;
-import de.mhus.lib.core.crypt.BouncyUtil;
+import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.MRandom;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
@@ -57,7 +57,7 @@ public class EccSigner extends MLog implements SignerProvider {
 
 	@Activate
 	public void doActivate(ComponentContext ctx) {
-		BouncyUtil.init();
+		MBouncy.init();
 	}
 	
 	@Override
