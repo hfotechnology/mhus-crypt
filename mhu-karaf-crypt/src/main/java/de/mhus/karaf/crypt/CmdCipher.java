@@ -15,6 +15,7 @@
  */
 package de.mhus.karaf.crypt;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -51,7 +53,12 @@ public class CmdCipher extends MLog implements Action {
 
 	@Argument(index=0, name="cipher", required=true, description="Selected cipher", multiValued=false)
     String cipher;
-	@Argument(index=1, name="cmd", required=true, description="Command:\n list\n encode [key] [text]\n decode [key] [encoded]\n create", multiValued=false)
+	@Argument(index=1, name="cmd", required=true, description="Command:\n"
+			+ " list\n"
+			+ " encode [key] [text]\n"
+			+ " decode [key] [encoded]\n"
+			+ " create\n"
+			+ " ", multiValued=false)
     String cmd;
 
 	@Argument(index=2, name="paramteters", required=false, description="Parameters", multiValued=true)
