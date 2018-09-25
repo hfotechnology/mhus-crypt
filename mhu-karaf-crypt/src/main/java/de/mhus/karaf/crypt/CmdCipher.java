@@ -15,7 +15,6 @@
  */
 package de.mhus.karaf.crypt;
 
-import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,7 +25,6 @@ import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;

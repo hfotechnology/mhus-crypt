@@ -32,7 +32,6 @@ import de.mhus.osgi.crypt.api.NotDecryptedException;
 import de.mhus.osgi.crypt.api.PemProcessContext;
 import de.mhus.osgi.crypt.api.SignNotValidException;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
-import de.mhus.osgi.crypt.api.currency.CurrencyProvider;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
 import de.mhus.osgi.services.MOsgi;
 
@@ -79,11 +78,11 @@ public class CryptApiImpl extends MLog implements CryptApi {
 		return MOsgi.getService(SignerProvider.class, "(signer="+signer+")");
 	}
 
-	@Override
-	public CurrencyProvider getCurrency(String currency) throws NotFoundException {
-		currency = normalizeName(currency);
-		return MOsgi.getService(CurrencyProvider.class, "(currency="+currency+")");
-	}
+//	@Override
+//	public CurrencyProvider getCurrency(String currency) throws NotFoundException {
+//		currency = normalizeName(currency);
+//		return MOsgi.getService(CurrencyProvider.class, "(currency="+currency+")");
+//	}
 
 	private String normalizeName(String currency) {
 		return currency.trim().toUpperCase();
