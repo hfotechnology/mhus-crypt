@@ -163,7 +163,11 @@ public class CmdCipher extends MLog implements Action {
 			PemPair keys = prov.createKeys(p);
 			System.out.println(keys.getPublic());
 			System.out.println(new PemKey((PemKey)keys.getPrivate(), false));
-			PemBlock encoded = prov.encode(keys.getPublic(), text);
+			
+			PemKey pubKey = new PemKey(keys.getPublic());
+			pubKey.putAll(p); // put cmd parameters e.g. AesLength
+			
+			PemBlock encoded = prov.encode(pubKey, text);
 			System.out.println(encoded);
 			String decoded = prov.decode(keys.getPrivate(), encoded, passphrase);
 			System.out.println(decoded);
