@@ -56,6 +56,7 @@ public class CmdCipher extends MLog implements Action {
 			+ " encode [key] [text]\n"
 			+ " decode [key] [encoded]\n"
 			+ " create\n"
+			+ " test"
 			+ " ", multiValued=false)
     String cmd;
 
