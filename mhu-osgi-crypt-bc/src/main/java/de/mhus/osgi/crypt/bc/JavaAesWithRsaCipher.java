@@ -53,7 +53,7 @@ public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 	private final String NAME = "AESwithRSA-JCE";
 
 	@Override
-	public PemBlock encode(PemPub key, String content) throws MException {
+	public PemBlock encrypt(PemPub key, String content) throws MException {
 		try {
 			// prepare AES key
 			int aesLength = key.getInt("AesLength", 128);
@@ -101,7 +101,7 @@ public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 	}
 
 	@Override
-	public String decode(PemPriv key, PemBlock encoded, String passphrase) throws MException {
+	public String decrypt(PemPriv key, PemBlock encoded, String passphrase) throws MException {
 		try {
 			
 			

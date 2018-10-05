@@ -63,7 +63,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
 	}
 	
 	@Override
-	public PemBlock encode(PemPub key, String content) throws MException {
+	public PemBlock encrypt(PemPub key, String content) throws MException {
 		try {
 			byte[] encKey = key.getBytesBlock();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
@@ -99,7 +99,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
 	}
 
 	@Override
-	public String decode(PemPriv key, PemBlock encoded, String passphrase) throws MException {
+	public String decrypt(PemPriv key, PemBlock encoded, String passphrase) throws MException {
 		try {
 			byte[] encKey = key.getBytesBlock();
 			if (MString.isSet(passphrase))

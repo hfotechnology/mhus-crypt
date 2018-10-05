@@ -26,7 +26,7 @@ import de.mhus.lib.errors.MException;
 public interface CipherProvider {
 
 	/**
-	 * Encode content, return a string block.
+	 * Encrypt content, return a string block.
 	 * 
 	 * @param key
 	 * @param content 
@@ -34,16 +34,16 @@ public interface CipherProvider {
 	 * @return block with encoded content
 	 * @throws MException 
 	 */
-	PemBlock encode(PemPub key, String content) throws MException;
+	PemBlock encrypt(PemPub key, String content) throws MException;
 
-	String decode(PemPriv key, PemBlock encoded, String passphrase) throws MException;
+	String decrypt(PemPriv key, PemBlock encoded, String passphrase) throws MException;
 	
-	default String decode(PemPriv key, PemBlock encoded, SecureString passphrase) throws MException {
-		return decode(key, encoded, passphrase == null ? null : passphrase.value());
+	default String decrypt(PemPriv key, PemBlock encoded, SecureString passphrase) throws MException {
+		return decrypt(key, encoded, passphrase == null ? null : passphrase.value());
 	};
 	
-	default String decode(PemPriv key, PemBlock encoded) throws MException {
-		return decode(key, encoded, (String)null);
+	default String decrypt(PemPriv key, PemBlock encoded) throws MException {
+		return decrypt(key, encoded, (String)null);
 	};
 	
 	String getName();

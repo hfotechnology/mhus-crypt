@@ -55,8 +55,8 @@ public class CmdCipher extends MLog implements Action {
     String cipher;
 	@Argument(index=1, name="cmd", required=true, description="Command:\n"
 			+ " list\n"
-			+ " encode [key] [text]\n"
-			+ " decode [key] [encoded]\n"
+			+ " encrypt [key] [text]\n"
+			+ " decrypt [key] [encoded]\n"
 			+ " create\n"
 			+ " test"
 			+ " ", multiValued=false)
@@ -90,17 +90,17 @@ public class CmdCipher extends MLog implements Action {
 		CipherProvider prov = MApi.lookup(CryptApi.class).getCipher(cipher);
 
 		switch (cmd) {
-		case "encode": { 
+		case "encrypt": { 
 			String text = parameters[1];
 			PemPub key = PemUtil.cipherPubFromString(parameters[0]);
-			PemBlock res = prov.encode(key, text);
+			PemBlock res = prov.encrypt(key, text);
 			System.out.println(res);
 			return res;
 		}
-		case "decode": { 
+		case "decrypt": { 
 			PemBlock text = findEncodedBlock(parameters[1]);
 			PemPriv key = PemUtil.cipherPrivFromString(parameters[0]);
-			String res = prov.decode(key, text, passphrase);
+			String res = prov.decrypt(key, text, passphrase);
 			System.out.println(res);
 			return res;
 		}
@@ -173,9 +173,9 @@ public class CmdCipher extends MLog implements Action {
 			p.remove("text");
 			pubKey.putAll(p); // put cmd parameters e.g. AesLength
 			
-			PemBlock encoded = prov.encode(pubKey, text);
+			PemBlock encoded = prov.encrypt(pubKey, text);
 			System.out.println(encoded);
-			String decoded = prov.decode(keys.getPrivate(), encoded, passphrase);
+			String decoded = prov.decrypt(keys.getPrivate(), encoded, passphrase);
 			System.out.println(decoded);
 			boolean valid = text.equals(decoded);
 			System.out.println("Valide: " + valid);

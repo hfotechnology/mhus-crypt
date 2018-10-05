@@ -161,11 +161,11 @@ public class PemProcessorTest extends TestCase {
 		JavaRsaCipher cipher = new JavaRsaCipher();
 		
 		String text = contentBlock.toString();
-		PemBlock enc = cipher.encode(PemUtil.toKey(pubKeyCipher), text);
+		PemBlock enc = cipher.encrypt(PemUtil.toKey(pubKeyCipher), text);
 		
 		System.out.println(enc);
 
-		String dec = cipher.decode(PemUtil.toKey(privKeyCipher), enc);
+		String dec = cipher.decrypt(PemUtil.toKey(privKeyCipher), enc);
 		
 		assertEquals(text, dec);
 		

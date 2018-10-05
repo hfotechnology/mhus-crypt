@@ -172,7 +172,7 @@ public class CryptApiImpl extends MLog implements CryptApi {
 			}
 		
 			CipherProvider api = getCipher(block.getString(PemBlock.METHOD));
-			String decoded = api.decode(keyKey, block, context.getPassphrase(keyId,block));
+			String decoded = api.decrypt(keyKey, block, context.getPassphrase(keyId,block));
 			SecureString sec = new SecureString(decoded);
 			decoded = "";
 			context.foundSecret(block, sec);
