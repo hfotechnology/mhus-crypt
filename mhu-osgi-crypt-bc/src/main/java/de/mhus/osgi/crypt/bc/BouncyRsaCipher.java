@@ -35,6 +35,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.Blowfish;
 import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.MRandom;
@@ -101,7 +102,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
 	public String decode(PemPriv key, PemBlock encoded, String passphrase) throws MException {
 		try {
 			byte[] encKey = key.getBytesBlock();
-			if (passphrase != null)
+			if (MString.isSet(passphrase))
 				encKey = Blowfish.decrypt(encKey, passphrase);
 			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
@@ -155,7 +156,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
 
 			byte[] privBytes = priv.getEncoded();
 			String passphrase = properties.getString("passphrase", null);
-			if (passphrase != null)
+			if (MString.isSet(passphrase))
 				privBytes = Blowfish.encrypt(privBytes, passphrase);
 
 			PemKey xpub  = new PemKey(PemBlock.BLOCK_PUB , pub.getEncoded(), false  )
@@ -171,7 +172,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
 					.set(PemBlock.IDENT, privId)
 					.set(PemBlock.PUB_ID, pubId);
 			
-			if (passphrase != null)
+			if (MString.isSet(passphrase))
 				xpriv.set(PemBlock.ENCRYPTED, PemBlock.ENC_BLOWFISH);
 			privBytes = null;
 			return new PemKeyPair(xpriv, xpub);

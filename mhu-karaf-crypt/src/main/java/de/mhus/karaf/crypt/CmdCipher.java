@@ -28,6 +28,7 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.crypt.Blowfish;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
 import de.mhus.lib.core.crypt.pem.PemKey;
@@ -35,6 +36,7 @@ import de.mhus.lib.core.crypt.pem.PemPair;
 import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.core.crypt.pem.PemUtil;
+import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
 import de.mhus.lib.core.vault.DefaultEntry;
 import de.mhus.lib.core.vault.MVault;
@@ -158,13 +160,17 @@ public class CmdCipher extends MLog implements Action {
 			MProperties p = MProperties.explodeToMProperties(parameters);
 			if (passphrase != null)
 				p.setString("passphrase", passphrase);
-			String text = Lorem.create(p.getInt("lorem", 1));
+			String text = p.getString("text", null);
+			if (text == null) text = Lorem.create(p.getInt("lorem", 2));
 			System.out.println(text);
+			
 			PemPair keys = prov.createKeys(p);
 			System.out.println(keys.getPublic());
 			System.out.println(new PemKey((PemKey)keys.getPrivate(), false));
 			
 			PemKey pubKey = new PemKey(keys.getPublic());
+			
+			p.remove("text");
 			pubKey.putAll(p); // put cmd parameters e.g. AesLength
 			
 			PemBlock encoded = prov.encode(pubKey, text);
@@ -173,7 +179,13 @@ public class CmdCipher extends MLog implements Action {
 			System.out.println(decoded);
 			boolean valid = text.equals(decoded);
 			System.out.println("Valide: " + valid);
-			
+			//unblowfish
+			if (MString.isSet(passphrase)) {
+				System.out.println();
+				byte[] unblowfished = Blowfish.decrypt(new PemKey((PemKey)keys.getPrivate()).getBytesBlock(), passphrase);
+				System.out.println("Unblowfished private key:");
+				System.out.println(Base64.encode(unblowfished));
+			}
 		} break;
 		default:
 			System.out.println("Command unknown");
