@@ -14,3 +14,9 @@
     limitations under the License.
 ====
 
+cryptversion=1.4.3-SNAPSHOT
+
+install -s mvn:org.bouncycastle/bcprov-jdk16/1.46
+
+install -s mvn:de.mhus.osgi/mhu-osgi-crypt-api/${cryptversion}
+install -s mvn:de.mhus.osgi/mhu-osgi-crypt-bc/${cryptversion}
