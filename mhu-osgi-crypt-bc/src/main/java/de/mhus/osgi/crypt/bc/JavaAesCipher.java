@@ -33,6 +33,7 @@ import de.mhus.lib.core.crypt.pem.PemPair;
 import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.errors.MException;
+import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.util.CryptUtil;
 
@@ -86,7 +87,7 @@ public class JavaAesCipher extends MLog implements CipherProvider {
 
 	@Override
 	public PemPair createKeys(IProperties properties) throws MException {
-		int length = properties.getInt("length", 256);
+		int length = properties.getInt(CryptApi.LENGTH, 256);
 		length = length / 8 * 8;
 		byte[] key = new byte[length/8];
 		MRandom random = MApi.lookup(MRandom.class);

@@ -41,6 +41,7 @@ import de.mhus.lib.core.crypt.pem.PemPair;
 import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.errors.MException;
+import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
 import de.mhus.osgi.crypt.api.util.CryptUtil;
 
@@ -108,7 +109,7 @@ public class JavaDsaSigner extends MLog implements SignerProvider {
 	public PemPair createKeys(IProperties properties) throws MException {
 		try {
 			if (properties == null) properties = new MProperties();
-			int len = properties.getInt("length", 1024);
+			int len = properties.getInt(CryptApi.LENGTH, 1024);
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
 			MRandom random = MApi.lookup(MRandom.class);
 			keyGen.initialize(len, random.getSecureRandom());
@@ -121,7 +122,7 @@ public class JavaDsaSigner extends MLog implements SignerProvider {
 			UUID pubId = UUID.randomUUID();
 			
 			byte[] privBytes = priv.getEncoded();
-			String passphrase = properties.getString("passphrase", null);
+			String passphrase = properties.getString(CryptApi.PASSPHRASE, null);
 			if (MString.isSet(passphrase))
 				privBytes = Blowfish.encrypt(privBytes, passphrase);
 

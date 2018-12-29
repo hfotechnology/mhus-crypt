@@ -25,6 +25,9 @@ import de.mhus.osgi.crypt.api.signer.SignerProvider;
 
 public interface CryptApi {
 
+	String PASSPHRASE = "passphrase";
+	String LENGTH = "length";
+
 	PemBlock sign(PemPriv key, String text, String passphrase) throws MException;
 
 	CipherProvider getCipher(String cipher) throws MException;

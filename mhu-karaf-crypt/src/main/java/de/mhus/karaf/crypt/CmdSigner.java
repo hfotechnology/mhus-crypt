@@ -85,7 +85,7 @@ public class CmdSigner extends MLog implements Action {
 		case "create": {
 			MProperties p = MProperties.explodeToMProperties(parameters);
 			if (passphrase != null)
-				p.setString("passphrase", passphrase);
+				p.setString(CryptApi.PASSPHRASE, passphrase);
 			PemPair keys = prov.createKeys(p);
 			PemPriv priv = keys.getPrivate();
 			PemPub pub = keys.getPublic();
@@ -153,7 +153,7 @@ public class CmdSigner extends MLog implements Action {
 		case "test": {
 			MProperties p = MProperties.explodeToMProperties(parameters);
 			if (passphrase != null)
-				p.setString("passphrase", passphrase);
+				p.setString(CryptApi.PASSPHRASE, passphrase);
 			String text = Lorem.create(p.getInt("lorem", 1));
 			
 			System.out.println(text);
