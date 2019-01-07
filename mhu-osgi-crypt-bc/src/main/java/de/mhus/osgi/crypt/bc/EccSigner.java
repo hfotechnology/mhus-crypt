@@ -52,7 +52,7 @@ import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 // http://bouncycastle.org/wiki/display/JA1/Elliptic+Curve+Key+Pair+Generation+and+Key+Factories
 
-@Component(properties="signer=ECC-BC")
+@Component(property="signer=ECC-BC")
 public class EccSigner extends MLog implements SignerProvider {
 
 	private static String NAME = "ECC-BC";

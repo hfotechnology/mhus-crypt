@@ -48,7 +48,7 @@ import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.util.CryptUtil;
 
-@Component(properties="cipher=AESWITHRSA-JCE") // Default AESwithRSA - Java Cryptography Extension
+@Component(property="cipher=AESWITHRSA-JCE") // Default AESwithRSA - Java Cryptography Extension
 public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 
 	private final String NAME = "AESwithRSA-JCE";

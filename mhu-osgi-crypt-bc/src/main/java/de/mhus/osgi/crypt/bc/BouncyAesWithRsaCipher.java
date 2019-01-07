@@ -54,7 +54,7 @@ import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 // https://bouncycastle-pgp-cookbook.blogspot.de/2013/01/generating-rsa-keys.html
 
-@Component(properties="cipher=AESWITHRSA-BC",immediate=true) // Bouncycastle RSA
+@Component(property="cipher=AESWITHRSA-BC",immediate=true) // Bouncycastle RSA
 public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 
 	private final String NAME = "AESwithRSA-BC";

@@ -37,7 +37,7 @@ import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.util.CryptUtil;
 
-@Component(properties="cipher=AES-JCE") // Default Symmetric AES - Java Cryptography Extension
+@Component(property="cipher=AES-JCE") // Default Symmetric AES - Java Cryptography Extension
 public class JavaAesCipher extends MLog implements CipherProvider {
 
 	private final String NAME = "AES-JCE";
