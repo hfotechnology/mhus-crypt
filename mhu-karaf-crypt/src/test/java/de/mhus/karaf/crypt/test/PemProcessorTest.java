@@ -153,7 +153,7 @@ public class PemProcessorTest {
 	"-----END CIPHER-----\n";
 
 	@BeforeAll
-	protected void setUp() throws Exception {
+	public static void setUp() throws Exception {
 		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		MBouncy.init();
 	}
