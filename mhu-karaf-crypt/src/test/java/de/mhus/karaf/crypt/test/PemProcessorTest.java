@@ -31,9 +31,12 @@ import de.mhus.osgi.crypt.api.signer.SignerProvider;
 import de.mhus.osgi.crypt.api.util.SimplePemProcessContext;
 import de.mhus.osgi.crypt.bc.EccSigner;
 import de.mhus.osgi.crypt.bc.JavaRsaCipher;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class PemProcessorTest extends TestCase {
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+public class PemProcessorTest {
 	
 	final String content = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
 
@@ -149,12 +152,13 @@ public class PemProcessorTest extends TestCase {
 	"\n"+
 	"-----END CIPHER-----\n";
 
-	@Override
+	@BeforeAll
 	protected void setUp() throws Exception {
 		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		MBouncy.init();
 	}
 	
+	@Test
 	public void testCreateCipher() throws ParseException, MException {
 		System.out.println(">>> testCreateCipher");
 		
@@ -171,6 +175,7 @@ public class PemProcessorTest extends TestCase {
 		
 	}
 	
+    @Test
 	public void testEmbeddedCipher() throws MException {
 		System.out.println(">>> testEmbeddedCipher");
 		
@@ -194,6 +199,7 @@ public class PemProcessorTest extends TestCase {
 		
 	}
 	
+    @Test
 	public void testCreateSign() throws MException {
 		System.out.println(">>> testCreateSign");
 		
@@ -206,10 +212,11 @@ public class PemProcessorTest extends TestCase {
 		
 		boolean valid = signer.validate(PemUtil.toKey(pubKeySign), text, sign);
 		System.out.println(valid);
-		assertTrue("Signer result is not valid",valid);
+		assertTrue(valid, "Signer result is not valid");
 		
 	}
 	
+    @Test
 	public void testSign() throws MException {
 		System.out.println(">>> testSign");
 		
