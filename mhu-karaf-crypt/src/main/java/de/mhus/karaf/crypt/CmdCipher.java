@@ -24,7 +24,7 @@ import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -87,7 +87,7 @@ public class CmdCipher extends MLog implements Action {
 			return null;
 		}
 
-		CipherProvider prov = MApi.lookup(CryptApi.class).getCipher(cipher);
+		CipherProvider prov = M.l(CryptApi.class).getCipher(cipher);
 
 		switch (cmd) {
 		case "encrypt": { 

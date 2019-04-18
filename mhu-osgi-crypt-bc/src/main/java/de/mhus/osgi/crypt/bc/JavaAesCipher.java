@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.osgi.service.component.annotations.Component;
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.crypt.MRandom;
 import de.mhus.lib.core.crypt.pem.PemBlock;
@@ -90,7 +90,7 @@ public class JavaAesCipher extends MLog implements CipherProvider {
 		int length = properties.getInt(CryptApi.LENGTH, 256);
 		length = length / 8 * 8;
 		byte[] key = new byte[length/8];
-		MRandom random = MApi.lookup(MRandom.class);
+		MRandom random = M.l(MRandom.class);
 		for (int i = 0; i < key.length; i++)
 			key[i] = random.getByte();
 		

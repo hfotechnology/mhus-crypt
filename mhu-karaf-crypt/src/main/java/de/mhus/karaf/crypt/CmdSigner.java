@@ -24,7 +24,7 @@ import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -79,7 +79,7 @@ public class CmdSigner extends MLog implements Action {
 			return null;
 		}
 
-		SignerProvider prov = MApi.lookup(CryptApi.class).getSigner(signer);
+		SignerProvider prov = M.l(CryptApi.class).getSigner(signer);
 
 		switch (cmd) {
 		case "create": {

@@ -15,6 +15,12 @@
  */
 package de.mhus.karaf.crypt.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import de.mhus.karaf.crypt.CryptApiImpl;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.crypt.MBouncy;
@@ -31,10 +37,6 @@ import de.mhus.osgi.crypt.api.signer.SignerProvider;
 import de.mhus.osgi.crypt.api.util.SimplePemProcessContext;
 import de.mhus.osgi.crypt.bc.EccSigner;
 import de.mhus.osgi.crypt.bc.JavaRsaCipher;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 public class PemProcessorTest {
 	

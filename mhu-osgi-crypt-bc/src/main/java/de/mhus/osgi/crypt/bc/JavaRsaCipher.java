@@ -29,7 +29,7 @@ import javax.crypto.Cipher;
 
 import org.osgi.service.component.annotations.Component;
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -134,7 +134,7 @@ public class JavaRsaCipher extends MLog implements CipherProvider {
 			if (properties == null) properties = new MProperties();
 			int len = properties.getInt(CryptApi.LENGTH, 1024); // 8192
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-			MRandom random = MApi.lookup(MRandom.class);
+			MRandom random = M.l(MRandom.class);
 			keyGen.initialize(len, random.getSecureRandom());
 			
 			KeyPair    pair = keyGen.generateKeyPair();
