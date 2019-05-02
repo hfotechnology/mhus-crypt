@@ -54,11 +54,17 @@ import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 // https://bouncycastle-pgp-cookbook.blogspot.de/2013/01/generating-rsa-keys.html
 
-@Component(property="cipher=AESWITHRSA-BC",immediate=true) // Bouncycastle RSA
+@Component(property="cipher=AESWITHRSA-BC-01",immediate=true) // Bouncycastle RSA
 public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 
-	private final String NAME = "AESwithRSA-BC";
+	private final String NAME = "AESwithRSA-BC-01";
 	
+    private static final String PROVIDER = "BC";
+    private static final String TRANSFORMATION_RSA = "RSA/ECB/PKCS1Padding";
+    private static final String ALGORITHM_RSA = "RSA";
+    private static final String TRANSFORMATION_AES = "AES";
+    private static final String ALGORITHM_AES = "AES";
+
 	@Activate
 	public void doActivate(ComponentContext ctx) {
 		MBouncy.init();
@@ -81,10 +87,10 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 			// prepare RSA
 			byte[] encKey = key.getBytesBlock();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA, PROVIDER);
 			PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
 
-			Cipher cipher = Cipher.getInstance("RSA", "BC");
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION_RSA, PROVIDER);
 			cipher.init(Cipher.ENCRYPT_MODE, pubKey);
 			
 			String stringEncoding = "utf-8";
@@ -94,8 +100,8 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 			
 			// encode content
 			byte[] dataToSend = content.getBytes(stringEncoding);
-			Cipher c = Cipher.getInstance("AES", "BC");
-			SecretKeySpec k = new SecretKeySpec(aesKey, "AES");
+			Cipher c = Cipher.getInstance(TRANSFORMATION_AES, PROVIDER);
+			SecretKeySpec k = new SecretKeySpec(aesKey, ALGORITHM_AES);
 			c.init(Cipher.ENCRYPT_MODE, k);
 			byte[] encryptedData = c.doFinal(dataToSend);
 
@@ -121,10 +127,10 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 			if (MString.isSet(passphrase))
 				encKey = Blowfish.decrypt(encKey, passphrase);
 			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA, PROVIDER);
 			PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
 
-			Cipher cipher = Cipher.getInstance("RSA", "BC");
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION_RSA, PROVIDER);
 			cipher.init(Cipher.DECRYPT_MODE, privKey);
 						
 			String aesEncKey = encoded.getString("AesKey");
@@ -134,7 +140,7 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 			
 			byte[] data = encoded.getBytesBlock();
 			Cipher c = Cipher.getInstance("AES");
-			SecretKeySpec k = new SecretKeySpec(aesKey, "AES");
+			SecretKeySpec k = new SecretKeySpec(aesKey, ALGORITHM_AES);
 			c.init(Cipher.DECRYPT_MODE, k);
 			byte[] enc = c.doFinal(data);
 			
@@ -157,7 +163,7 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 		try {
 			if (properties == null) properties = new MProperties();
 			int len = properties.getInt(CryptApi.LENGTH, 1024);
-			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "BC");
+			KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM_RSA, PROVIDER);
 			MRandom random = M.l(MRandom.class);
 			keyGen.initialize(len, random.getSecureRandom());
 			

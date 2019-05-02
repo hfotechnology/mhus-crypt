@@ -47,20 +47,23 @@ import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.util.CryptUtil;
 
-@Component(property="cipher=RSA-JCE") // Default RSA - Java Cryptography Extension
+@Component(property="cipher=RSA-JCE-01") // Default RSA - Java Cryptography Extension
 public class JavaRsaCipher extends MLog implements CipherProvider {
 
-	private final String NAME = "RSA-JCE";
+	private final String NAME = "RSA-JCE-01";
 
+    private static final String TRANSFORMATION_RSA = "RSA/ECB/PKCS1Padding";
+    private static final String ALGORITHM_RSA = "RSA";
+    
 	@Override
 	public PemBlock encrypt(PemPub key, String content) throws MException {
 		try {
 			byte[] encKey = key.getBytesBlock();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
 			PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
 
-			Cipher cipher = Cipher.getInstance("RSA");
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION_RSA);
 			cipher.init(Cipher.ENCRYPT_MODE, pubKey);
 			
 			String stringEncoding = "utf-8";
@@ -95,10 +98,10 @@ public class JavaRsaCipher extends MLog implements CipherProvider {
 			if (MString.isSet(passphrase))
 				encKey = Blowfish.decrypt(encKey, passphrase);
 			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
 			PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
 
-			Cipher cipher = Cipher.getInstance("RSA");
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION_RSA);
 			cipher.init(Cipher.DECRYPT_MODE, privKey);
 			
 			int length = key.getInt(PemBlock.LENGTH, 1024);

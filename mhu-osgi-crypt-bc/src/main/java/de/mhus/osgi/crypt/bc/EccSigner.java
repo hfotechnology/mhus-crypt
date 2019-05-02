@@ -52,10 +52,14 @@ import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 // http://bouncycastle.org/wiki/display/JA1/Elliptic+Curve+Key+Pair+Generation+and+Key+Factories
 
-@Component(property="signer=ECC-BC")
+@Component(property="signer=ECC-BC-01")
 public class EccSigner extends MLog implements SignerProvider {
 
-	private static String NAME = "ECC-BC";
+	private static String NAME = "ECC-BC-01";
+
+    private static final String PROVIDER = "BC";
+    private static final String TRANSFORMATION_ECC = "SHA512WITHECDSA";
+    private static final String ALGORITHM_ECC = "ECDSA";
 
 	@Activate
 	public void doActivate(ComponentContext ctx) {
@@ -69,10 +73,10 @@ public class EccSigner extends MLog implements SignerProvider {
 			if (MString.isSet(passphrase))
 				encKey = Blowfish.decrypt(encKey, passphrase);
 			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("ECDSA", "BC");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
 			PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
 			
-			Signature dsa = Signature.getInstance("SHA512WITHECDSA", "BC"); 
+			Signature dsa = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER); 
 			dsa.initSign(privKey);
 			byte[] buffer = text.getBytes();
 			dsa.update(buffer, 0, buffer.length);
@@ -93,10 +97,10 @@ public class EccSigner extends MLog implements SignerProvider {
 		try {
 			byte[] encKey = key.getBytesBlock();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("ECDSA", "BC");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
 			PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
 			
-			Signature sig = Signature.getInstance("SHA512WITHECDSA", "BC");
+			Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER);
 			sig.initVerify(pubKey);
 			
 			byte[] buffer = text.getBytes();
@@ -134,7 +138,7 @@ public class EccSigner extends MLog implements SignerProvider {
 
 			String stdName = properties.getString("stdName", "prime192v1");
 			ECGenParameterSpec     ecGenSpec = new ECGenParameterSpec(stdName);
-			KeyPairGenerator    g = KeyPairGenerator.getInstance("ECDSA", "BC");
+			KeyPairGenerator    g = KeyPairGenerator.getInstance(ALGORITHM_ECC, PROVIDER);
 			MRandom random = M.l(MRandom.class);
 			g.initialize(ecGenSpec, random.getSecureRandom());
 			KeyPair pair = g.generateKeyPair();

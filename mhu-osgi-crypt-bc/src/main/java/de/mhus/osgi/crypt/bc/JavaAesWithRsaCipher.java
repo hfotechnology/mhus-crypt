@@ -48,10 +48,15 @@ import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.util.CryptUtil;
 
-@Component(property="cipher=AESWITHRSA-JCE") // Default AESwithRSA - Java Cryptography Extension
+@Component(property="cipher=AESWITHRSA-JCE-01") // Default AESwithRSA - Java Cryptography Extension
 public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 
-	private final String NAME = "AESwithRSA-JCE";
+	private final String NAME = "AESwithRSA-JCE-01";
+
+    private static final String TRANSFORMATION_RSA = "RSA/ECB/PKCS1Padding";
+    private static final String ALGORITHM_RSA = "RSA";
+    private static final String TRANSFORMATION_AES = "AES";
+    private static final String ALGORITHM_AES = "AES";
 
 	@Override
 	public PemBlock encrypt(PemPub key, String content) throws MException {
@@ -70,10 +75,10 @@ public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 			// prepare RSA
 			byte[] encKey = key.getBytesBlock();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
 			PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
 
-			Cipher cipher = Cipher.getInstance("RSA");
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION_RSA);
 			cipher.init(Cipher.ENCRYPT_MODE, pubKey);
 			
 			String stringEncoding = "utf-8";
@@ -83,8 +88,8 @@ public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 			
 			// encode content
 			byte[] dataToSend = content.getBytes(stringEncoding);
-			Cipher c = Cipher.getInstance("AES");
-			SecretKeySpec k = new SecretKeySpec(aesKey, "AES");
+			Cipher c = Cipher.getInstance(TRANSFORMATION_AES);
+			SecretKeySpec k = new SecretKeySpec(aesKey, ALGORITHM_AES);
 			c.init(Cipher.ENCRYPT_MODE, k);
 			byte[] encryptedData = c.doFinal(dataToSend);
 
@@ -110,10 +115,10 @@ public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 			if (MString.isSet(passphrase))
 				encKey = Blowfish.decrypt(encKey, passphrase);
 			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
 			PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
 
-			Cipher cipher = Cipher.getInstance("RSA");
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION_RSA);
 			cipher.init(Cipher.DECRYPT_MODE, privKey);
 						
 			String aesEncKey = encoded.getString("AesKey");
@@ -122,8 +127,8 @@ public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 			byte[] aesKey = cipher.doFinal(b, 0, b.length);
 			
 			byte[] data = encoded.getBytesBlock();
-			Cipher c = Cipher.getInstance("AES");
-			SecretKeySpec k = new SecretKeySpec(aesKey, "AES");
+			Cipher c = Cipher.getInstance(TRANSFORMATION_AES);
+			SecretKeySpec k = new SecretKeySpec(aesKey, ALGORITHM_AES);
 			c.init(Cipher.DECRYPT_MODE, k);
 			byte[] enc = c.doFinal(data);
 			
@@ -146,7 +151,7 @@ public class JavaAesWithRsaCipher extends MLog implements CipherProvider {
 		try {
 			if (properties == null) properties = new MProperties();
 			int len = properties.getInt(CryptApi.LENGTH, 1024); // 8192
-			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+			KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM_RSA);
 			MRandom random = M.l(MRandom.class);
 			keyGen.initialize(len, random.getSecureRandom());
 			

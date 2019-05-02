@@ -37,10 +37,10 @@ import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.util.CryptUtil;
 
-@Component(property="cipher=AES-JCE") // Default Symmetric AES - Java Cryptography Extension
+@Component(property="cipher=AES-JCE-01") // Default Symmetric AES - Java Cryptography Extension
 public class JavaAesCipher extends MLog implements CipherProvider {
 
-	private final String NAME = "AES-JCE";
+	private final String NAME = "AES-JCE-01";
 
 	@Override
 	public PemBlock encrypt(PemPub key, String content) throws MException {
