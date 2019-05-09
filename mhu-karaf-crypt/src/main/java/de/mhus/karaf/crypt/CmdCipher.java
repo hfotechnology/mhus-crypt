@@ -22,7 +22,9 @@ import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
+import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
@@ -47,7 +49,7 @@ import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.services.MOsgi;
 
-@Command(scope = "crypta", name = "cipher", description = "Cipher Handling")
+@Command(scope = "crypt", name = "cipher", description = "Cipher Handling")
 @Service
 public class CmdCipher extends MLog implements Action {
 
@@ -65,8 +67,11 @@ public class CmdCipher extends MLog implements Action {
 	@Argument(index=2, name="paramteters", required=false, description="Parameters", multiValued=true)
     String[] parameters;
 
-    @Option(name = "-i", aliases = { "--import" }, description = "Import into vault (don't forget to save vault)", required = false, multiValued = false)
-    boolean imp = false;
+    @Option(name = "-ip", aliases = { "--importPublic" }, description = "Import Public Key into vault (don't forget to save vault)", required = false, multiValued = false)
+    boolean impPubl = false;
+    
+    @Option(name = "-is", aliases = { "--importSecret" }, description = "Import Private Key into vault (don't forget to save vault)", required = false, multiValued = false)
+    boolean impPriv = false;
     
     @Option(name = "-s", aliases = { "--source" }, description = "Define vault source other then 'default'", required = false, multiValued = false)
     String impSource = "default";
@@ -76,7 +81,16 @@ public class CmdCipher extends MLog implements Action {
 
     @Option(name = "-p", aliases = { "--passphrase" }, description = "Define a passphrase if required", required = false, multiValued = false)
     String passphrase = null;
+
+    @Option(name = "-sp", aliases = { "--setPublic" }, description = "Set Public Key into shell property", required = false, multiValued = false)
+    String setPubl;
     
+    @Option(name = "-ss", aliases = { "--setSecret" }, description = "Set Private Key into shell property", required = false, multiValued = false)
+    String setPriv;
+    
+    @Reference
+    private Session session;
+
 	@Override
 	public Object execute() throws Exception {
 
@@ -130,7 +144,7 @@ public class CmdCipher extends MLog implements Action {
 			System.out.println();
 			System.out.println("Public : " + PemUtil.toLine(pub ));
 			
-			if (imp) {
+			if (impPriv || impPubl) {
 				MVault vault = MVaultUtil.loadDefault();
 				VaultSource vaultSource = vault.getSource(impSource);
 				if (vaultSource == null) {
@@ -144,14 +158,22 @@ public class CmdCipher extends MLog implements Action {
 								);
 						
 						MutableVaultSource mvs = (MutableVaultSource)vaultSource;
-						mvs.addEntry(pubEntry);
-						mvs.addEntry(privEntry);
+						if (impPubl)
+						    mvs.addEntry(pubEntry);
+						if (impPriv)
+						    mvs.addEntry(privEntry);
 						
 						System.out.println("IMPORTED!");
 					} else {
 						System.out.println("Vault source is not writable " + impSource);
 					}
 				}
+			}
+			if (setPubl != null) {
+			    session.put(setPubl, pub.toString());
+			}
+			if (setPriv != null) {
+			    session.put(setPriv, new PemKey((PemKey)priv, false).toString());
 			}
 			
 			return new Object[] {priv,pub};
