@@ -15,6 +15,7 @@
  */
 package de.mhus.karaf.crypt;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,9 +28,11 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.crypt.Blowfish;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
@@ -88,6 +91,15 @@ public class CmdCipher extends MLog implements Action {
     @Option(name = "-ss", aliases = { "--setSecret" }, description = "Set Private Key into shell property", required = false, multiValued = false)
     String setPriv;
     
+    @Option(name = "-wp", aliases = { "--writePublic" }, description = "Write Public Key to file", required = false, multiValued = false)
+    String writePubl;
+    
+    @Option(name = "-ws", aliases = { "--writeSecret" }, description = "Write Private Key tofile", required = false, multiValued = false)
+    String writePriv;
+    
+    @Option(name = "-q", aliases = { "--quiet" }, description = "Quiet mode", required = false, multiValued = false)
+    boolean quiet = false;
+
     @Reference
     private Session session;
 
@@ -119,6 +131,20 @@ public class CmdCipher extends MLog implements Action {
 			return res;
 		}
 		case "create": {
+		    
+		    if ("".equals(passphrase)) {
+		        System.out.print("Passphrase: ");
+		        System.out.flush();
+		        passphrase = Console.get().readPassword();
+                System.out.print("Verify: ");
+                System.out.flush();
+                String verify = Console.get().readPassword();
+                if (!passphrase.equals(verify)) {
+                    System.out.println("Not the same - failed");
+                    return null;
+                }
+		    }
+		    
 			MProperties p = MProperties.explodeToMProperties(parameters);
 			if (passphrase != null)
 				p.setString(CryptApi.PASSPHRASE, passphrase);
@@ -138,11 +164,13 @@ public class CmdCipher extends MLog implements Action {
 				((PemKey)pub).setDate(PemBlock.CREATED, now);
 			}
 
-			System.out.println(new PemKey((PemKey)priv, false)); // need to create a new key without security restriction
-			System.out.println(pub);
-			System.out.println("Private: " + PemUtil.toLine(priv));
-			System.out.println();
-			System.out.println("Public : " + PemUtil.toLine(pub ));
+			if (!quiet) {
+    			System.out.println(new PemKey((PemKey)priv, false)); // need to create a new key without security restriction
+    			System.out.println(pub);
+    			System.out.println("Private: " + PemUtil.toLine(priv));
+    			System.out.println();
+    			System.out.println("Public : " + PemUtil.toLine(pub ));
+			}
 			
 			if (impPriv || impPubl) {
 				MVault vault = MVaultUtil.loadDefault();
@@ -169,13 +197,18 @@ public class CmdCipher extends MLog implements Action {
 					}
 				}
 			}
-			if (setPubl != null) {
+			if (setPubl != null)
 			    session.put(setPubl, pub.toString());
-			}
-			if (setPriv != null) {
+
+			if (setPriv != null)
 			    session.put(setPriv, new PemKey((PemKey)priv, false).toString());
-			}
 			
+			if (writePubl != null)
+			    MFile.writeFile(new File(writePubl), pub.toString());
+			
+			if (writePriv != null)
+                MFile.writeFile(new File(writePriv), new PemKey((PemKey)priv, false).toString());
+
 			return new Object[] {priv,pub};
 		}
 		case "test": {
