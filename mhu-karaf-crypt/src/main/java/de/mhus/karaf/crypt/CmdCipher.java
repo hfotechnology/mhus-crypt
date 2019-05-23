@@ -103,6 +103,9 @@ public class CmdCipher extends MLog implements Action {
     @Option(name = "-q", aliases = { "--quiet" }, description = "Quiet mode", required = false, multiValued = false)
     boolean quiet = false;
 
+    @Option(name = "-v", aliases = { "--verbose" }, description = "Verbose will also print private key", required = false, multiValued = false)
+    boolean verbose = false;
+    
     @Reference
     private Session session;
 
@@ -170,9 +173,11 @@ public class CmdCipher extends MLog implements Action {
 			}
 
 			if (!quiet) {
-    			System.out.println(new PemKey((PemKey)priv, false)); // need to create a new key without security restriction
+			    if (verbose)
+			        System.out.println(new PemKey((PemKey)priv, false)); // need to create a new key without security restriction
     			System.out.println(pub);
-    			System.out.println("Private: " + PemUtil.toLine(priv));
+                if (verbose)
+                    System.out.println("Private: " + PemUtil.toLine(priv));
     			System.out.println();
     			System.out.println("Public : " + PemUtil.toLine(pub ));
 			}
