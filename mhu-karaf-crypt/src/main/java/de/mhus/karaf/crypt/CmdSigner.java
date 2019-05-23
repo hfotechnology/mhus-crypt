@@ -182,10 +182,12 @@ public class CmdSigner extends MLog implements Action {
                 session.put(setPriv, new PemKey((PemKey)priv, false).toString());
 
             if (writePubl != null)
-                MFile.writeFile(new File(writePubl), pub.toString());
+                if (!MFile.writeFile(new File(writePubl), pub.toString()))
+                    System.out.println("*** Write Failed: " + writePubl);
 
             if (writePriv != null)
-                MFile.writeFile(new File(writePriv), new PemKey((PemKey)priv, false).toString());
+                if (!MFile.writeFile(new File(writePriv), new PemKey((PemKey)priv, false).toString()))
+                    System.out.println("*** Write Failed: " + writePriv);
 
 			return new Object[] {priv,pub};
 		} 

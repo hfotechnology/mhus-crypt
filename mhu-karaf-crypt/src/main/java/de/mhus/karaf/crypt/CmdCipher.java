@@ -120,14 +120,16 @@ public class CmdCipher extends MLog implements Action {
 			String text = parameters[1];
 			PemPub key = PemUtil.cipherPubFromString(parameters[0]);
 			PemBlock res = prov.encrypt(key, text);
-			System.out.println(res);
+            if (!quiet)
+                System.out.println(res);
 			return res;
 		}
 		case "decrypt": { 
 			PemBlock text = findEncodedBlock(parameters[1]);
 			PemPriv key = PemUtil.cipherPrivFromString(parameters[0]);
 			String res = prov.decrypt(key, text, passphrase);
-			System.out.println(res);
+			if (!quiet)
+			    System.out.println(res);
 			return res;
 		}
 		case "create": {
@@ -204,10 +206,12 @@ public class CmdCipher extends MLog implements Action {
 			    session.put(setPriv, new PemKey((PemKey)priv, false).toString());
 			
 			if (writePubl != null)
-			    MFile.writeFile(new File(writePubl), pub.toString());
-			
+			    if (!MFile.writeFile(new File(writePubl), pub.toString()))
+			        System.out.println("*** Write Failed: " + writePubl);
+
 			if (writePriv != null)
-                MFile.writeFile(new File(writePriv), new PemKey((PemKey)priv, false).toString());
+                if (!MFile.writeFile(new File(writePriv), new PemKey((PemKey)priv, false).toString()))
+                    System.out.println("*** Write Failed: " + writePriv);
 
 			return new Object[] {priv,pub};
 		}
