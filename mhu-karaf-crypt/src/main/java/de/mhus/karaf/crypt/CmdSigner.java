@@ -33,6 +33,7 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.Console;
+import de.mhus.lib.core.crypt.Blowfish;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
 import de.mhus.lib.core.crypt.pem.PemKey;
@@ -88,6 +89,9 @@ public class CmdSigner extends MLog implements Action {
     
     @Option(name = "-ws", aliases = { "--writeSecret" }, description = "Write Private Key tofile", required = false, multiValued = false)
     String writePriv;
+    
+    @Option(name = "-wsp", aliases = { "--writeSecretPassphrase" }, description = "Set a extra passphrase for the secret key file", required = false, multiValued = false)
+    String writePrivPassphrase = null;
     
     @Option(name = "-q", aliases = { "--quiet" }, description = "Quiet mode", required = false, multiValued = false)
     boolean quiet = false;
@@ -185,9 +189,26 @@ public class CmdSigner extends MLog implements Action {
                 if (!MFile.writeFile(new File(writePubl), pub.toString()))
                     System.out.println("*** Write Failed: " + writePubl);
 
-            if (writePriv != null)
-                if (!MFile.writeFile(new File(writePriv), new PemKey((PemKey)priv, false).toString()))
+            if (writePriv != null) {
+                String text = new PemKey((PemKey)priv, false).toString();
+                if (writePrivPassphrase != null) {
+                    if (writePrivPassphrase.length() == 0) {
+                        System.out.print("WS Passphrase: ");
+                        System.out.flush();
+                        writePrivPassphrase = Console.get().readPassword();
+                        System.out.print("WS Verify: ");
+                        System.out.flush();
+                        String verify = Console.get().readPassword();
+                        if (!writePrivPassphrase.equals(verify)) {
+                            System.out.println("Not the same - failed");
+                            return null;
+                        }
+                    }
+                    text = "-----BEGIN CIPHER-----\nIdent: " + priv.getString(PemBlock.IDENT) + "\n\n" + Blowfish.encrypt(text, writePrivPassphrase) + "\n-----END CIPHER-----";
+                }
+                if (!MFile.writeFile(new File(writePriv), text))
                     System.out.println("*** Write Failed: " + writePriv);
+            }
 
 			return new Object[] {priv,pub};
 		} 
