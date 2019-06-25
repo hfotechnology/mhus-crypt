@@ -26,6 +26,7 @@ import de.mhus.lib.core.crypt.pem.PemUtil;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
+import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.CryptException;
 import de.mhus.osgi.crypt.api.NotDecryptedException;
@@ -33,7 +34,6 @@ import de.mhus.osgi.crypt.api.PemProcessContext;
 import de.mhus.osgi.crypt.api.SignNotValidException;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 import de.mhus.osgi.crypt.api.signer.SignerProvider;
-import de.mhus.osgi.services.MOsgi;
 
 @Component
 public class CryptApiImpl extends MLog implements CryptApi {

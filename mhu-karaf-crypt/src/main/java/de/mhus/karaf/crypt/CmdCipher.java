@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
-import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
@@ -29,7 +28,6 @@ import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.Console;
@@ -48,13 +46,14 @@ import de.mhus.lib.core.vault.MVault;
 import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.MutableVaultSource;
 import de.mhus.lib.core.vault.VaultSource;
+import de.mhus.osgi.api.karaf.AbstractCmd;
+import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
-import de.mhus.osgi.services.MOsgi;
 
 @Command(scope = "crypt", name = "cipher", description = "Cipher Handling")
 @Service
-public class CmdCipher extends MLog implements Action {
+public class CmdCipher extends AbstractCmd {
 
 	@Argument(index=0, name="cipher", required=true, description="Selected cipher", multiValued=false)
     String cipher;
@@ -110,10 +109,10 @@ public class CmdCipher extends MLog implements Action {
     private Session session;
 
 	@Override
-	public Object execute() throws Exception {
+	public Object execute2() throws Exception {
 
 		if (cmd.equals("list")) {
-			for (de.mhus.osgi.services.MOsgi.Service<CipherProvider> ref : MOsgi.getServiceRefs(CipherProvider.class, null)) {
+			for (MOsgi.Service<CipherProvider> ref : MOsgi.getServiceRefs(CipherProvider.class, null)) {
 				System.out.println(ref.getReference().getProperty("cipher"));
 			}
 			return null;
