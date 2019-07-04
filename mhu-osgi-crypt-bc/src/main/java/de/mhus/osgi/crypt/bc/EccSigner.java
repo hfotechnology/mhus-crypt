@@ -76,12 +76,12 @@ public class EccSigner extends MLog implements SignerProvider {
 			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
 			PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
 			
-			Signature dsa = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER); 
-			dsa.initSign(privKey);
+			Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER); 
+			sig.initSign(privKey);
 			byte[] buffer = text.getBytes();
-			dsa.update(buffer, 0, buffer.length);
+			sig.update(buffer, 0, buffer.length);
 			
-			byte[] realSig = dsa.sign();
+			byte[] realSig = sig.sign();
 			
 			PemBlockModel out = new PemBlockModel(PemBlock.BLOCK_SIGN, realSig);
 			CryptUtil.prepareSignOut(key, out, getName());
