@@ -81,6 +81,9 @@ public class CmdCipher extends AbstractCmd {
     @Option(name = "-d", aliases = { "--description" }, description = "Descritpion of the key", required = false, multiValued = false)
     String desc = "";
 
+    @Option(name = "-n", aliases = { "--name" }, description = "Name of the key", required = false, multiValued = false)
+    String name = "";
+    
     @Option(name = "-p", aliases = { "--passphrase" }, description = "Define a passphrase if required", required = false, multiValued = false)
     String passphrase = null;
 
@@ -189,8 +192,8 @@ public class CmdCipher extends AbstractCmd {
 				} else {
 					if (vaultSource instanceof MutableVaultSource) {
 						
-						DefaultEntry pubEntry = new DefaultEntry((UUID)pub.get(PemBlock.IDENT), prov.getName() + MVault.SUFFIX_CIPHER_PUBLIC_KEY, desc, pub.toString() );
-						DefaultEntry privEntry = new DefaultEntry((UUID)priv.get(PemBlock.IDENT), prov.getName() + MVault.SUFFIX_CIPHER_PRIVATE_KEY, desc, 
+						DefaultEntry pubEntry = new DefaultEntry((UUID)pub.get(PemBlock.IDENT), prov.getName() + MVault.SUFFIX_CIPHER_PUBLIC_KEY, name, desc, pub.toString() );
+						DefaultEntry privEntry = new DefaultEntry((UUID)priv.get(PemBlock.IDENT), prov.getName() + MVault.SUFFIX_CIPHER_PRIVATE_KEY, name, desc, 
 								new PemKey((PemKey)priv, false).toString() 
 								);
 						
