@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.osgi.crypt.bc;
@@ -52,136 +50,139 @@ import de.mhus.osgi.crypt.api.util.CryptUtil;
 
 // http://bouncycastle.org/wiki/display/JA1/Elliptic+Curve+Key+Pair+Generation+and+Key+Factories
 
-@Component(property="signer=ECC-BC-01")
+@Component(property = "signer=ECC-BC-01")
 public class EccSigner extends MLog implements SignerProvider {
 
-	private static String NAME = "ECC-BC-01";
+    private static String NAME = "ECC-BC-01";
 
     private static final String PROVIDER = "BC";
     private static final String TRANSFORMATION_ECC = "SHA512WITHECDSA";
     private static final String ALGORITHM_ECC = "ECDSA";
 
-	@Activate
-	public void doActivate(ComponentContext ctx) {
-		MBouncy.init();
-	}
-	
-	@Override
-	public PemBlock sign(PemPriv key, String text, String passphrase) throws MException {
-		try {
-			byte[] encKey = key.getBytesBlock();
-			if (MString.isSet(passphrase))
-				encKey = Blowfish.decrypt(encKey, passphrase);
-			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
-			PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
-			
-			Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER); 
-			sig.initSign(privKey);
-			byte[] buffer = text.getBytes();
-			sig.update(buffer, 0, buffer.length);
-			
-			byte[] realSig = sig.sign();
-			
-			PemBlockModel out = new PemBlockModel(PemBlock.BLOCK_SIGN, realSig);
-			CryptUtil.prepareSignOut(key, out, getName());
-			
-			return out;
-		} catch (Exception e) {
-			throw new MException(e);
-		}
-	}
+    @Activate
+    public void doActivate(ComponentContext ctx) {
+        MBouncy.init();
+    }
 
-	@Override
-	public boolean validate(PemPub key, String text, PemBlock sign) throws MException {
-		try {
-			byte[] encKey = key.getBytesBlock();
-			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
-			PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
-			
-			Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER);
-			sig.initVerify(pubKey);
-			
-			byte[] buffer = text.getBytes();
-			sig.update(buffer, 0, buffer.length);
+    @Override
+    public PemBlock sign(PemPriv key, String text, String passphrase) throws MException {
+        try {
+            byte[] encKey = key.getBytesBlock();
+            if (MString.isSet(passphrase)) encKey = Blowfish.decrypt(encKey, passphrase);
+            PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
+            PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
 
-			byte[] sigToVerify = sign.getBytesBlock();
-			return sig.verify(sigToVerify);
-			
-		} catch (Exception e) {
-			throw new MException(e);
-		}
-	}
+            Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER);
+            sig.initSign(privKey);
+            byte[] buffer = text.getBytes();
+            sig.update(buffer, 0, buffer.length);
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+            byte[] realSig = sig.sign();
 
-	@Override
-	public PemPair createKeys(IProperties properties) throws MException {
-		try {
-//			EllipticCurve curve = new EllipticCurve(
-//		            new ECFieldFp(new BigInteger("883423532389192164791648750360308885314476597252960362792450860609699839")), // q
-//		            new BigInteger("7fffffffffffffffffffffff7fffffffffff8000000000007ffffffffffc", 16), // a            
-//		            new BigInteger("6b016c3bdcf18941d0d654921475ca71a9db2fb27d1d37796185c2942c0a", 16)); // b
-//			ECParameterSpec ecSpec = new ECParameterSpec(
-//			            curve,
-//			            ECPointUtil.decodePoint(curve, Hex.decode("020ffa963cdca8816ccc33b8642bedf905c3d358573d3f27fbbd3b3cb9aaaf")), // G
-//			            new BigInteger("883423532389192164791648750360308884807550341691627752275345424702807307"), // n
-//			            1); // h
-//			KeyPairGenerator g = KeyPairGenerator.getInstance("ECDSA", "BC");
-//			g.initialize(ecSpec, random.getSecureRandom());
-//			KeyPair pair = g.generateKeyPair();
-			if (properties == null) properties = new MProperties();
+            PemBlockModel out = new PemBlockModel(PemBlock.BLOCK_SIGN, realSig);
+            CryptUtil.prepareSignOut(key, out, getName());
 
-			String stdName = properties.getString("stdName", "prime192v1");
-			ECGenParameterSpec     ecGenSpec = new ECGenParameterSpec(stdName);
-			KeyPairGenerator    g = KeyPairGenerator.getInstance(ALGORITHM_ECC, PROVIDER);
-			MRandom random = M.l(MRandom.class);
-			g.initialize(ecGenSpec, random.getSecureRandom());
-			KeyPair pair = g.generateKeyPair();
-			
-			PrivateKey priv = pair.getPrivate();
-			
-			PublicKey pub = pair.getPublic();
-			
-			UUID privId = UUID.randomUUID();
-			UUID pubId = UUID.randomUUID();
+            return out;
+        } catch (Exception e) {
+            throw new MException(e);
+        }
+    }
 
-			byte[] privBytes = priv.getEncoded();
-			String passphrase = properties.getString(CryptApi.PASSPHRASE, null);
-			if (MString.isSet(passphrase))
-				privBytes = Blowfish.encrypt(privBytes, passphrase);
+    @Override
+    public boolean validate(PemPub key, String text, PemBlock sign) throws MException {
+        try {
+            byte[] encKey = key.getBytesBlock();
+            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
+            PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
 
-			PemKey xpub  = new PemKey(PemBlock.BLOCK_PUB , pub.getEncoded(), false  )
-					.set(PemBlock.METHOD, getName())
-					.set("StdName", stdName)
-					.set(PemBlock.FORMAT, pub.getFormat())
-					.set(PemBlock.IDENT, pubId)
-					.set(PemBlock.PRIV_ID, privId);
-			PemKey xpriv = new PemKey(PemBlock.BLOCK_PRIV, privBytes, true )
-					.set(PemBlock.METHOD, getName())
-					.set("StdName", stdName)
-					.set(PemBlock.FORMAT, priv.getFormat())
-					.set(PemBlock.IDENT, privId)
-					.set(PemBlock.PUB_ID, pubId);
-			
-			if (MString.isSet(passphrase))
-				xpriv.set(PemBlock.ENCRYPTED, PemBlock.ENC_BLOWFISH);
-			privBytes = null;
-			return new PemKeyPair(xpriv, xpub);
+            Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER);
+            sig.initVerify(pubKey);
 
-		} catch (Throwable t) {
-			throw new MException(t);
-		}
-	}
+            byte[] buffer = text.getBytes();
+            sig.update(buffer, 0, buffer.length);
 
+            byte[] sigToVerify = sign.getBytesBlock();
+            return sig.verify(sigToVerify);
+
+        } catch (Exception e) {
+            throw new MException(e);
+        }
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public PemPair createKeys(IProperties properties) throws MException {
+        try {
+            //			EllipticCurve curve = new EllipticCurve(
+            //		            new ECFieldFp(new
+            // BigInteger("883423532389192164791648750360308885314476597252960362792450860609699839")), // q
+            //		            new
+            // BigInteger("7fffffffffffffffffffffff7fffffffffff8000000000007ffffffffffc", 16), // a
+            //		            new
+            // BigInteger("6b016c3bdcf18941d0d654921475ca71a9db2fb27d1d37796185c2942c0a", 16)); // b
+            //			ECParameterSpec ecSpec = new ECParameterSpec(
+            //			            curve,
+            //			            ECPointUtil.decodePoint(curve,
+            // Hex.decode("020ffa963cdca8816ccc33b8642bedf905c3d358573d3f27fbbd3b3cb9aaaf")), // G
+            //			            new
+            // BigInteger("883423532389192164791648750360308884807550341691627752275345424702807307"), // n
+            //			            1); // h
+            //			KeyPairGenerator g = KeyPairGenerator.getInstance("ECDSA", "BC");
+            //			g.initialize(ecSpec, random.getSecureRandom());
+            //			KeyPair pair = g.generateKeyPair();
+            if (properties == null) properties = new MProperties();
+
+            String stdName = properties.getString("stdName", "prime192v1");
+            ECGenParameterSpec ecGenSpec = new ECGenParameterSpec(stdName);
+            KeyPairGenerator g = KeyPairGenerator.getInstance(ALGORITHM_ECC, PROVIDER);
+            MRandom random = M.l(MRandom.class);
+            g.initialize(ecGenSpec, random.getSecureRandom());
+            KeyPair pair = g.generateKeyPair();
+
+            PrivateKey priv = pair.getPrivate();
+
+            PublicKey pub = pair.getPublic();
+
+            UUID privId = UUID.randomUUID();
+            UUID pubId = UUID.randomUUID();
+
+            byte[] privBytes = priv.getEncoded();
+            String passphrase = properties.getString(CryptApi.PASSPHRASE, null);
+            if (MString.isSet(passphrase)) privBytes = Blowfish.encrypt(privBytes, passphrase);
+
+            PemKey xpub =
+                    new PemKey(PemBlock.BLOCK_PUB, pub.getEncoded(), false)
+                            .set(PemBlock.METHOD, getName())
+                            .set("StdName", stdName)
+                            .set(PemBlock.FORMAT, pub.getFormat())
+                            .set(PemBlock.IDENT, pubId)
+                            .set(PemBlock.PRIV_ID, privId);
+            PemKey xpriv =
+                    new PemKey(PemBlock.BLOCK_PRIV, privBytes, true)
+                            .set(PemBlock.METHOD, getName())
+                            .set("StdName", stdName)
+                            .set(PemBlock.FORMAT, priv.getFormat())
+                            .set(PemBlock.IDENT, privId)
+                            .set(PemBlock.PUB_ID, pubId);
+
+            if (MString.isSet(passphrase)) xpriv.set(PemBlock.ENCRYPTED, PemBlock.ENC_BLOWFISH);
+            privBytes = null;
+            return new PemKeyPair(xpriv, xpub);
+
+        } catch (Throwable t) {
+            throw new MException(t);
+        }
+    }
 }
 
 /*
- * 
+ *
 The following ECDSA curves are currently supported by the Bouncy Castle APIs:
 F p
 X9.62
@@ -221,7 +222,7 @@ c2pnb163v2	163
 c2pnb163v3	163
 c2pnb176w1	176
 c2tnb191v1	191
-c2tnb191v2	
+c2tnb191v2
 191
 c2tnb191v3	191
 c2pnb208w1	208
@@ -253,7 +254,7 @@ sect571r1	571
 NIST (aliases for SEC curves)
 Curve
 Size (in bits)
-B-163	
+B-163
 163
 B-233	233
 B-283	283
@@ -285,5 +286,5 @@ GostR3410-2001-CryptoPro-XchA
 GostR3410-2001-CryptoPro-C
 GostR3410-2001-CryptoPro-B
 
- * 
+ *
  */
