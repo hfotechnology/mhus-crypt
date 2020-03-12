@@ -19,13 +19,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>mhu-osgi-crypt-bc</artifactId>
+	<artifactId>karaf-crypt</artifactId>
 	<packaging>bundle</packaging>
-	<description>bouncecastle Encryption</description>
+	<description>karaf commands for crypt api</description>
 	<parent>
-		<groupId>de.mhus.osgi</groupId>
-		<version>6.3.1-SNAPSHOT</version>
 		<artifactId>mhus-osgi-crypt</artifactId>
+		<groupId>de.mhus.osgi</groupId>
+		<version>7.0.0-SNAPSHOT</version>
 	</parent>
 
 	<build>
@@ -38,17 +38,15 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Service-Component>*</Service-Component>
+						<Export-Package>de.mhus.karaf.crypt*;version=${project.version}</Export-Package>
 						<Import-Package>
-							sun.security.*;resolution:=optional,
-							junit.*;resolution:=optional,
-							*</Import-Package>
-						<DynamicImport-Package>*</DynamicImport-Package>
+							*
+						</Import-Package>
+						<Service-Component>*</Service-Component>
 					</instructions>
 				</configuration>
 			</plugin>
 		</plugins>
-
 	</build>
 
 	<dependencies>
@@ -60,24 +58,39 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.karaf.shell</groupId>
+			<artifactId>org.apache.karaf.shell.console</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>de.mhus.lib</groupId>
-			<artifactId>mhu-lib-annotations</artifactId>
+			<artifactId>lib-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.mhus.lib</groupId>
-			<artifactId>mhu-lib-core</artifactId>
+			<artifactId>lib-annotations</artifactId>
 		</dependency>
-
+       	<dependency>
+			<groupId>de.mhus.osgi</groupId>
+			<artifactId>osgi-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>de.mhus.osgi</groupId>
-			<artifactId>mhu-osgi-crypt-api</artifactId>
+			<artifactId>osgi-crypt-api</artifactId>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>de.mhus.osgi</groupId>
+			<artifactId>osgi-crypt-bc</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<artifactId>bcprov-jdk16</artifactId>
 			<groupId>org.bouncycastle</groupId>
+			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 </project>

@@ -21,12 +21,12 @@
 	<modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.mhus.lib</groupId>
-        <version>6.5.0-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
         <artifactId>mhus-karaf</artifactId>
     </parent>
 	<groupId>de.mhus.osgi</groupId>
 	<artifactId>mhus-osgi-crypt</artifactId>
-	<version>6.3.1-SNAPSHOT</version>
+	<version>7.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>MHUS OSGi Tools</name>
 	<description>A set of tools to improve OSGi frameworks and karaf</description>
@@ -55,9 +55,9 @@
 	</developers>
 
 	<modules>
-		<module>mhu-osgi-crypt-api</module>
-		<module>mhu-osgi-crypt-bc</module>
-		<module>mhu-karaf-crypt</module>
+		<module>osgi-crypt-api</module>
+		<module>osgi-crypt-bc</module>
+		<module>karaf-crypt</module>
 	</modules>
 
     <dependencies>
