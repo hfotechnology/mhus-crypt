@@ -24,6 +24,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
@@ -235,7 +236,7 @@ public class CmdCipher extends AbstractCmd {
                         }
                     }
 
-                    MProperties p = MProperties.explodeToMProperties(parameters);
+                    MProperties p = IProperties.explodeToMProperties(parameters);
                     if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
                     PemPair keys = prov.createKeys(p);
                     PemPriv priv = keys.getPrivate();
@@ -337,7 +338,7 @@ public class CmdCipher extends AbstractCmd {
                 }
             case "test":
                 {
-                    MProperties p = MProperties.explodeToMProperties(parameters);
+                    MProperties p = IProperties.explodeToMProperties(parameters);
                     if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
                     String text = p.getString("text", null);
                     if (text == null) text = Lorem.create(p.getInt("lorem", 2));
