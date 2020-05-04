@@ -38,13 +38,13 @@ import de.mhus.lib.core.crypt.pem.PemPair;
 import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.core.crypt.pem.PemUtil;
+import de.mhus.lib.core.keychain.DefaultEntry;
+import de.mhus.lib.core.keychain.MKeychain;
+import de.mhus.lib.core.keychain.MKeychainUtil;
+import de.mhus.lib.core.keychain.MutableVaultSource;
+import de.mhus.lib.core.keychain.KeychainSource;
 import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
-import de.mhus.lib.core.vault.DefaultEntry;
-import de.mhus.lib.core.vault.MVault;
-import de.mhus.lib.core.vault.MVaultUtil;
-import de.mhus.lib.core.vault.MutableVaultSource;
-import de.mhus.lib.core.vault.VaultSource;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.crypt.api.CryptApi;
@@ -268,8 +268,8 @@ public class CmdCipher extends AbstractCmd {
                     }
 
                     if (impPriv || impPubl) {
-                        MVault vault = MVaultUtil.loadDefault();
-                        VaultSource vaultSource = vault.getSource(impSource);
+                        MKeychain vault = MKeychainUtil.loadDefault();
+                        KeychainSource vaultSource = vault.getSource(impSource);
                         if (vaultSource == null) {
                             System.out.println("Vault Source not found " + impSource);
                         } else {
@@ -278,14 +278,14 @@ public class CmdCipher extends AbstractCmd {
                                 DefaultEntry pubEntry =
                                         new DefaultEntry(
                                                 (UUID) pub.get(PemBlock.IDENT),
-                                                prov.getName() + MVault.SUFFIX_CIPHER_PUBLIC_KEY,
+                                                prov.getName() + MKeychain.SUFFIX_CIPHER_PUBLIC_KEY,
                                                 name,
                                                 desc,
                                                 pub.toString());
                                 DefaultEntry privEntry =
                                         new DefaultEntry(
                                                 (UUID) priv.get(PemBlock.IDENT),
-                                                prov.getName() + MVault.SUFFIX_CIPHER_PRIVATE_KEY,
+                                                prov.getName() + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY,
                                                 name,
                                                 desc,
                                                 new PemKey((PemKey) priv, false).toString());
