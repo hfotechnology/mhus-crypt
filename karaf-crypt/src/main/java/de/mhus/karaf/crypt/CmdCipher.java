@@ -45,6 +45,7 @@ import de.mhus.lib.core.keychain.MutableVaultSource;
 import de.mhus.lib.core.keychain.KeychainSource;
 import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
+import de.mhus.lib.errors.MException;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.crypt.api.CryptApi;
@@ -235,24 +236,45 @@ public class CmdCipher extends AbstractCmd {
                             return null;
                         }
                     }
-
-                    MProperties p = IProperties.explodeToMProperties(parameters);
-                    if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
-                    PemPair keys = prov.createKeys(p);
-                    PemPriv priv = keys.getPrivate();
-                    PemPub pub = keys.getPublic();
-
-                    Date now = new Date();
-                    if (priv instanceof PemKey) {
-                        if (MString.isSet(desc))
-                            ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
-                        ((PemKey) priv).setDate(PemBlock.CREATED, now);
-                    }
-                    if (pub instanceof PemKey) {
-                        if (MString.isSet(desc))
-                            ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
-                        ((PemKey) pub).setDate(PemBlock.CREATED, now);
-                    }
+                    PemPair keys = null;
+                    PemPriv priv = null;
+                    PemPub pub = null;
+                    
+                    for (int i = 0; i < 10; i++) {
+	                    MProperties p = IProperties.explodeToMProperties(parameters);
+	                    if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
+	                    keys = prov.createKeys(p);
+	                    priv = keys.getPrivate();
+	                    pub = keys.getPublic();
+	
+	                    Date now = new Date();
+	                    if (priv instanceof PemKey) {
+	                        if (MString.isSet(desc))
+	                            ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
+	                        ((PemKey) priv).setDate(PemBlock.CREATED, now);
+	                    }
+	                    if (pub instanceof PemKey) {
+	                        if (MString.isSet(desc))
+	                            ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
+	                        ((PemKey) pub).setDate(PemBlock.CREATED, now);
+	                    }
+	                    
+	                    // test
+                    	String text = Lorem.create(p.getInt("lorem", 2));
+                        PemBlock encoded = prov.encrypt(pub, text);
+                        String decoded = prov.decrypt(priv, encoded, passphrase);
+                        boolean valid = text.equals(decoded);
+                        if (valid) break;
+                        
+                        keys = null;
+                        priv = null;
+                        pub = null;
+	                }
+                    
+                    if (keys == null)
+                    	throw new MException("can't create keys, tests failed");
+                    
+                    // print
 
                     if (!quiet) {
                         if (verbose)
