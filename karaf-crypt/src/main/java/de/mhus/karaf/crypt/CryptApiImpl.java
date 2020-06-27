@@ -14,6 +14,7 @@
 package de.mhus.karaf.crypt;
 
 import org.osgi.service.component.annotations.Component;
+
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.crypt.pem.PemBlock;
@@ -24,7 +25,7 @@ import de.mhus.lib.core.crypt.pem.PemUtil;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
-import de.mhus.osgi.api.services.MOsgi;
+import de.mhus.osgi.api.MOsgi;
 import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.CryptException;
 import de.mhus.osgi.crypt.api.NotDecryptedException;

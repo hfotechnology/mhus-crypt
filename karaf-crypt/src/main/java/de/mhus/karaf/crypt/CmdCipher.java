@@ -39,15 +39,15 @@ import de.mhus.lib.core.crypt.pem.PemPriv;
 import de.mhus.lib.core.crypt.pem.PemPub;
 import de.mhus.lib.core.crypt.pem.PemUtil;
 import de.mhus.lib.core.keychain.DefaultEntry;
+import de.mhus.lib.core.keychain.KeychainSource;
 import de.mhus.lib.core.keychain.MKeychain;
 import de.mhus.lib.core.keychain.MKeychainUtil;
 import de.mhus.lib.core.keychain.MutableVaultSource;
-import de.mhus.lib.core.keychain.KeychainSource;
 import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
 import de.mhus.lib.errors.MException;
+import de.mhus.osgi.api.MOsgi;
 import de.mhus.osgi.api.karaf.AbstractCmd;
-import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.crypt.api.CryptApi;
 import de.mhus.osgi.crypt.api.cipher.CipherProvider;
 
