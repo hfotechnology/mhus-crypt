@@ -239,41 +239,40 @@ public class CmdCipher extends AbstractCmd {
                     PemPair keys = null;
                     PemPriv priv = null;
                     PemPub pub = null;
-                    
+
                     for (int i = 0; i < 10; i++) {
-	                    MProperties p = IProperties.explodeToMProperties(parameters);
-	                    if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
-	                    keys = prov.createKeys(p);
-	                    priv = keys.getPrivate();
-	                    pub = keys.getPublic();
-	
-	                    Date now = new Date();
-	                    if (priv instanceof PemKey) {
-	                        if (MString.isSet(desc))
-	                            ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
-	                        ((PemKey) priv).setDate(PemBlock.CREATED, now);
-	                    }
-	                    if (pub instanceof PemKey) {
-	                        if (MString.isSet(desc))
-	                            ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
-	                        ((PemKey) pub).setDate(PemBlock.CREATED, now);
-	                    }
-	                    
-	                    // test
-                    	String text = Lorem.create(p.getInt("lorem", 2));
+                        MProperties p = IProperties.explodeToMProperties(parameters);
+                        if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
+                        keys = prov.createKeys(p);
+                        priv = keys.getPrivate();
+                        pub = keys.getPublic();
+
+                        Date now = new Date();
+                        if (priv instanceof PemKey) {
+                            if (MString.isSet(desc))
+                                ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
+                            ((PemKey) priv).setDate(PemBlock.CREATED, now);
+                        }
+                        if (pub instanceof PemKey) {
+                            if (MString.isSet(desc))
+                                ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
+                            ((PemKey) pub).setDate(PemBlock.CREATED, now);
+                        }
+
+                        // test
+                        String text = Lorem.create(p.getInt("lorem", 2));
                         PemBlock encoded = prov.encrypt(pub, text);
                         String decoded = prov.decrypt(priv, encoded, passphrase);
                         boolean valid = text.equals(decoded);
                         if (valid) break;
-                        
+
                         keys = null;
                         priv = null;
                         pub = null;
-	                }
-                    
-                    if (keys == null)
-                    	throw new MException("can't create keys, tests failed");
-                    
+                    }
+
+                    if (keys == null) throw new MException("can't create keys, tests failed");
+
                     // print
 
                     if (!quiet) {
@@ -282,7 +281,7 @@ public class CmdCipher extends AbstractCmd {
                                     new PemKey(
                                             (PemKey) priv,
                                             false)); // need to create a new key without security
-                                                     // restriction
+                        // restriction
                         System.out.println(pub);
                         if (verbose) System.out.println("Private: " + PemUtil.toLine(priv));
                         System.out.println();
@@ -307,7 +306,8 @@ public class CmdCipher extends AbstractCmd {
                                 DefaultEntry privEntry =
                                         new DefaultEntry(
                                                 (UUID) priv.get(PemBlock.IDENT),
-                                                prov.getName() + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY,
+                                                prov.getName()
+                                                        + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY,
                                                 name,
                                                 desc,
                                                 new PemKey((PemKey) priv, false).toString());
