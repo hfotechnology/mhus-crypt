@@ -1,0 +1,196 @@
+<!-- 
+Test in browser:
+
+text = "ns,amnfd,nasf,jdnsd;lfk;ljkl4wiojrfoeisur8gdsoghjdghkjdn5ytke5ughirgjosdjijlgkjsdkghkjshkdjfghjkdskgjfhjkdshkjgfhjkdsfhgkuh5hsterkgkjdsfjgkjs5gkjdfngksjdnjfngkdsjfgnksdruk"
+encrypted = rsa01.encryptBc(publicKey,text);
+decrypted = rsa01.decryptBc(privateKey,encrypted,passphrase);
+text == decrypted
+
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cryptico/0.0.1343522940/cryptico.min.js"></script>
+<script src="cdn/forge/forge.min.js"></script>
+<script src="cdn/blowfish.js"></script>
+<script src="cdn/base64.js"></script>
+
+<script src="pem.js"></script>
+<script src="rsa01.js"></script>
+<script>
+$(document).ready(function() {
+	
+	out("Start");
+	try {
+        var encrypted = rsa01.encryptBc(publicKey,text);
+        
+        out(encrypted);
+        
+        // var decrypted = rsa01.decrypt(privateKeyPlain,encrypted,passphrase); // use without blowfish decryption
+        var decrypted = rsa01.decryptBc(privateKey,encrypted,passphrase);
+        
+        out(decrypted);
+
+        if (decrypted == text)
+            out("VALIDE");
+        else
+            out("IN-VALIDE " + text.length + " " + decrypted.length);
+	} catch (e) {
+		console.log(e);
+	}
+	out("End");
+	
+});
+
+function out(text) {
+	$("#out").val( $("#out").val() + "\n" + text );
+}
+
+var publicKey = "-----BEGIN PUBLIC KEY-----\n"+
+"Format: X.509\n"+
+"Ident: 59421288-313e-4147-b186-22ac79627c89\n"+
+"PrivateKey: 8eba27f7-b530-4240-83ac-d93f1d5557d2\n"+
+"Length: 1024\n"+
+"Method: RSA-BC-01\n"+
+"\n"+
+"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDPzSKj+3L1KQ\n"+
+"Z0+uwLGxHSJyBfSpRYpJYMxBeFD9bzdcE0px7lc0A/wzWAbWEb\n"+
+"0DoOrK/rrBldg657AJ9ZYGrcJTVd3rYUzkj7C37/BwP/y6H01t\n"+
+"mRmdA+ArEGQVoI5h0aaVWG/tg1IlWRtiD6OElgIbX5sDblTA1h\n"+
+"6uaChcWrlQIDAQAB\n"+
+"\n"+
+"-----END PUBLIC KEY-----\n";
+
+var privateKey ="-----BEGIN PRIVATE KEY-----\n"+
+    "Format: PKCS#8\n"+
+    "Ident: 8eba27f7-b530-4240-83ac-d93f1d5557d2\n"+
+    "Length: 1024\n"+
+    "PublicKey: 59421288-313e-4147-b186-22ac79627c89\n"+
+    "Encrypted: blowfish\n"+
+    "Method: RSA-BC-01\n"+
+    "\n"+
+    "Ni5FtIR8L/VeRZQrzSs6xf3lNoVoXiD+z/j/Cgb9gzXZe7+zNl\n"+
+    "jCOBwxufSRmJcJ1auGvDF6JvQCZFi9vvOZD3uu4x+8Lhx4PPD9\n"+
+    "myYRIkKNy2iJynoG5f0Zgki0KFdxzfJQQ5xxfGldV9CbDVdiO1\n"+
+    "rxnVNS1fDppmYIcAhz/Ig4fXLIx7AhuAiSegtqJ18cipi2k/Jz\n"+
+    "0fbzfOVxZ/b0yxqxkx0axxeCGQAqRsjJVp+ABLhwae1Too6Gdn\n"+
+    "+9XMfq1TXAN3kyo40PaV0rH6+a6oDD5X0BwnM92m7kJLzmPGeZ\n"+
+    "ZopTTrCiTKB1yUCRoCEqK8GKD3mzvIBOHUykw6h8IN2bz6T65r\n"+
+    "fzYJICSemgTCbdjFPGqzrj6pDybdsGUQ9Pjcsf44PQO2ahqAjW\n"+
+    "fJ+AkZiUWmwdtW+6s53bxXLtojkWaMrCKcrASM5PmhIyEPwP3G\n"+
+    "9UH8gEZgA1Mx4ZCRQirprM+gN/GvcGNS8Ksh+mSDzRoSWHzZ/s\n"+
+    "sbJIiiLUArtrzlye/+gWjYViNW1fna0ZqWDi64EM9fzWFWkJ7d\n"+
+    "v1rmUvusKBOXKX8C1bUa8UQedqH0QN/Q2gRD6wjbZ4RCmcuxpE\n"+
+    "ZHrRQ9IThOHzBgu899QBLXvN/4v2pkHJ55FPHRaP5oO5qnEOs4\n"+
+    "XCDIqKnBZNvibjvU4VZXll+S2WupY8VMPQ5ILnuOg/pp8a3j5w\n"+
+    "smGitAew8cEjrPOggemegOaWpvEv/3n58ePsWQFePIJaCKAaJw\n"+
+    "5y6KGU9UJ+ha+iZv6raibXvf+1V6gTIz8V61GzIlchpWpG97C/\n"+
+    "RmYsplDQ1q/+CR8VySvPQEROQP5w+r7Yb7lx1jiJcYGbGppqj1\n"+
+    "cnCw==\n"+
+    "\n"+
+    "-----END PRIVATE KEY-----\n";
+
+var privateKeyPlain ="-----BEGIN PRIVATE KEY-----\n"+
+"Format: PKCS#8\n"+
+"Ident: 8eba27f7-b530-4240-83ac-d93f1d5557d2\n"+
+"Length: 1024\n"+
+"PublicKey: 59421288-313e-4147-b186-22ac79627c89\n"+
+"Method: RSA-BC-01\n"+
+"\n"+
+"MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAM/NIqP7cvUpBnT67AsbEdInIF9KlFiklgzEF4UP1vN1wTSnHuVzQD/D"+
+"NYBtYRvQOg6sr+usGV2DrnsAn1lgatwlNV3ethTOSPsLfv8HA//LofTW2ZGZ0D4CsQZBWgjmHRppVYb+2DUiVZG2IPo4SWAhtfmwNuVMDWHq5oKFxauVAgMBAAECgYBSbh"+
+"A4tk0ivRRnoQWzXhiSoZyw0DfKdfdjtwGRcfgVeXebuFOEN1ScNoZpnHnx+4acPZpHRWyGcO7sshGD9cBNPqP2hvp9d+YvH3JOczO+D3xnSlfnMii0XR7eTaF32+T73rB4"+
+"G/cQ8+Gp9IeoZwrj60sa4WZUrOuvUeH4NQEIIQJBAOgi0iM973ZntKbeJBoEeIRX0nYIz5qGytXyeZJPFegUhX0Ljf9wQD9x8Zwm+8AhHmGyFasb1Cw/u4j7ATOnl90CQQDl"+
+"KeRg0KOZ9W6h+4o2XlDcL5aUJcEZulWGvIbUXcKUWBdQbrwMbCb/6bPpjScQFpTR6tZla4S9IULKkHJGPUMZAkEA42sBra8Gw1xUGkp02dxZaWZUdHirUnsNik6TlafPEV/Ra"+
+"zD/uylwd/ecOVvjtVV82z9JhSmtUnBZvJgTlFRzLQJBALej2HWU/GWV/nAkCOAEuLuaDwrtLk8VuQ/d6BYqhJEn/pbgBiXWTXJqr1gLWzBTSDLoA6MGhDqjesik9E5BLZECQFDV"+
+"DPjE10MbqVvkFMRPcPJvECBn44TFeg2MseEAkQHVgbfuvVgZ3eX2nc3uzqbflCfgi1F1lINBeoJQIb4eexQ=" +
+"\n"+
+"-----END PRIVATE KEY-----\n";
+
+var passphrase = "asdfghjkl";
+
+var text ="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore"+
+" magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,"+
+" no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"+
+" nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et"+
+" justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum"+
+" dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,"+
+" sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus"+
+" est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt"+
+" ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita"+
+" kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,"+
+" sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo"+
+" duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit"+
+" amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam"+
+" voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem"+
+" ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et"+
+" dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,"+
+" no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy"+
+" eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et"+
+" ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur"+
+" sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et"+
+" accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem"+
+" ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,"+
+" sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est"+
+" Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"+
+" labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd"+
+" gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed"+
+" diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo"+
+" dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,"+
+" consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."+
+" At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor"+
+" sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna"+
+" aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea"+
+" takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod"+
+" tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea"+
+" rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur"+
+" sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos"+
+" et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."+
+" Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"+
+" erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus"+
+" est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"+
+" labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd"+
+" gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n"+
+"\n"+
+"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"+
+" erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata"+
+" sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor"+
+" invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet"+
+" clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing"+
+" elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam"+
+" et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum"+
+" dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed"+
+" diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est"+
+" Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"+
+" labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd"+
+" gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed"+
+" diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo"+
+" duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit"+
+" amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam"+
+" voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem"+
+" ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore"+
+" et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd"+
+" gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed"+
+" diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo"+
+" duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor"+
+" sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam"+
+" voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem"+
+" ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore"+
+" et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd"+
+" gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,"+
+" sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et"+
+" justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum"+
+" dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,"+
+" sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus"+
+" est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt"+
+" ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita"+
+" kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
+
+var originalPrivateKey ="MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAM/NIqP7cvUpBnT67AsbEdInIF9KlFiklgzEF4UP1vN1wTSnHuVzQD/D"+
+"NYBtYRvQOg6sr+usGV2DrnsAn1lgatwlNV3ethTOSPsLfv8HA//LofTW2ZGZ0D4CsQZBWgjmHRppVYb+2DUiVZG2IPo4SWAhtfmwNuVMDWHq5oKFxauVAgMBAAECgYBSbh"+
+"A4tk0ivRRnoQWzXhiSoZyw0DfKdfdjtwGRcfgVeXebuFOEN1ScNoZpnHnx+4acPZpHRWyGcO7sshGD9cBNPqP2hvp9d+YvH3JOczO+D3xnSlfnMii0XR7eTaF32+T73rB4"+
+"G/cQ8+Gp9IeoZwrj60sa4WZUrOuvUeH4NQEIIQJBAOgi0iM973ZntKbeJBoEeIRX0nYIz5qGytXyeZJPFegUhX0Ljf9wQD9x8Zwm+8AhHmGyFasb1Cw/u4j7ATOnl90CQQDl"+
+"KeRg0KOZ9W6h+4o2XlDcL5aUJcEZulWGvIbUXcKUWBdQbrwMbCb/6bPpjScQFpTR6tZla4S9IULKkHJGPUMZAkEA42sBra8Gw1xUGkp02dxZaWZUdHirUnsNik6TlafPEV/Ra"+
+"zD/uylwd/ecOVvjtVV82z9JhSmtUnBZvJgTlFRzLQJBALej2HWU/GWV/nAkCOAEuLuaDwrtLk8VuQ/d6BYqhJEn/pbgBiXWTXJqr1gLWzBTSDLoA6MGhDqjesik9E5BLZECQFDV"+
+"DPjE10MbqVvkFMRPcPJvECBn44TFeg2MseEAkQHVgbfuvVgZ3eX2nc3uzqbflCfgi1F1lINBeoJQIb4eexQ=";
+
+</script>
+<textarea id="out" cols="100%" rows="18"></textarea>
