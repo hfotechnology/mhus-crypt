@@ -1,72 +1,19 @@
 <?php
-
-/**
- * Pure-PHP arbitrary precision integer arithmetic library.
+/*
+ * Copyright (C) 2020 Mike Hummel (mh@mhus.de)
  *
- * Supports base-2, base-10, base-16, and base-256 numbers.  Uses the GMP or BCMath extensions, if available,
- * and an internal implementation, otherwise.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * PHP versions 4 and 5
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * {@internal (all DocBlock comments regarding implementation - such as the one that follows - refer to the
- * {@link MATH_BIGINTEGER_MODE_INTERNAL MATH_BIGINTEGER_MODE_INTERNAL} mode)
- *
- * Math_BigInteger uses base-2**26 to perform operations such as multiplication and division and
- * base-2**52 (ie. two base 2**26 digits) to perform addition and subtraction.  Because the largest possible
- * value when multiplying two base-2**26 numbers together is a base-2**52 number, double precision floating
- * point numbers - numbers that should be supported on most hardware and whose significand is 53 bits - are
- * used.  As a consequence, bitwise operators such as >> and << cannot be used, nor can the modulo operator %,
- * which only supports integers.  Although this fact will slow this library down, the fact that such a high
- * base is being used should more than compensate.
- *
- * Numbers are stored in {@link http://en.wikipedia.org/wiki/Endianness little endian} format.  ie.
- * (new Math_BigInteger(pow(2, 26)))->value = array(0, 1)
- *
- * Useful resources are as follows:
- *
- *  - {@link http://www.cacr.math.uwaterloo.ca/hac/about/chap14.pdf Handbook of Applied Cryptography (HAC)}
- *  - {@link http://math.libtomcrypt.com/files/tommath.pdf Multi-Precision Math (MPM)}
- *  - Java's BigInteger classes.  See /j2se/src/share/classes/java/math in jdk-1_5_0-src-jrl.zip
- *
- * Here's an example of how to use this library:
- * <code>
- * <?php
- *    include 'Math/BigInteger.php';
- *
- *    $a = new Math_BigInteger(2);
- *    $b = new Math_BigInteger(3);
- *
- *    $c = $a->add($b);
- *
- *    echo $c->toString(); // outputs 5
- * ?>
- * </code>
- *
- * LICENSE: Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @category  Math
- * @package   Math_BigInteger
- * @author    Jim Wigginton <terrafrost@php.net>
- * @copyright 2006 Jim Wigginton
- * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 /**#@+
  * Reduction constants
  *

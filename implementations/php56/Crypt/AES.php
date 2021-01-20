@@ -1,70 +1,19 @@
 <?php
-
-/**
- * Pure-PHP implementation of AES.
+/*
+ * Copyright (C) 2020 Mike Hummel (mh@mhus.de)
  *
- * Uses mcrypt, if available/possible, and an internal implementation, otherwise.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * PHP versions 4 and 5
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * NOTE: Since AES.php is (for compatibility and phpseclib-historical reasons) virtually
- * just a wrapper to Rijndael.php you may consider using Rijndael.php instead of
- * to save one include_once().
- *
- * If {@link self::setKeyLength() setKeyLength()} isn't called, it'll be calculated from
- * {@link self::setKey() setKey()}.  ie. if the key is 128-bits, the key length will be 128-bits.  If it's 136-bits
- * it'll be null-padded to 192-bits and 192 bits will be the key length until {@link self::setKey() setKey()}
- * is called, again, at which point, it'll be recalculated.
- *
- * Since Crypt_AES extends Crypt_Rijndael, some functions are available to be called that, in the context of AES, don't
- * make a whole lot of sense.  {@link self::setBlockLength() setBlockLength()}, for instance.  Calling that function,
- * however possible, won't do anything (AES has a fixed block length whereas Rijndael has a variable one).
- *
- * Here's a short example of how to use this library:
- * <code>
- * <?php
- *    include 'Crypt/AES.php';
- *
- *    $aes = new Crypt_AES();
- *
- *    $aes->setKey('abcdefghijklmnop');
- *
- *    $size = 10 * 1024;
- *    $plaintext = '';
- *    for ($i = 0; $i < $size; $i++) {
- *        $plaintext.= 'a';
- *    }
- *
- *    echo $aes->decrypt($aes->encrypt($plaintext));
- * ?>
- * </code>
- *
- * LICENSE: Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @category  Crypt
- * @package   Crypt_AES
- * @author    Jim Wigginton <terrafrost@php.net>
- * @copyright 2008 Jim Wigginton
- * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
- * @link      http://phpseclib.sourceforge.net
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 /**
  * Include Crypt_Rijndael
  */

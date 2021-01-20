@@ -1,58 +1,19 @@
 <?php
-
-/**
- * Pure-PHP implementation of SFTP.
+/*
+ * Copyright (C) 2020 Mike Hummel (mh@mhus.de)
  *
- * PHP versions 4 and 5
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Currently only supports SFTPv2 and v3, which, according to wikipedia.org, "is the most widely used version,
- * implemented by the popular OpenSSH SFTP server".  If you want SFTPv4/5/6 support, provide me with access
- * to an SFTPv4/5/6 server.
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * The API for this library is modeled after the API from PHP's {@link http://php.net/book.ftp FTP extension}.
- *
- * Here's a short example of how to use this library:
- * <code>
- * <?php
- *    include 'Net/SFTP.php';
- *
- *    $sftp = new Net_SFTP('www.domain.tld');
- *    if (!$sftp->login('username', 'password')) {
- *        exit('Login Failed');
- *    }
- *
- *    echo $sftp->pwd() . "\r\n";
- *    $sftp->put('filename.ext', 'hello, world!');
- *    print_r($sftp->nlist());
- * ?>
- * </code>
- *
- * LICENSE: Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @category  Net
- * @package   Net_SFTP
- * @author    Jim Wigginton <terrafrost@php.net>
- * @copyright 2009 Jim Wigginton
- * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
- * @link      http://phpseclib.sourceforge.net
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 /**
  * Include Net_SSH2
  */

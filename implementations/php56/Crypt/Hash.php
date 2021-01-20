@@ -1,59 +1,19 @@
 <?php
-
-/**
- * Pure-PHP implementations of keyed-hash message authentication codes (HMACs) and various cryptographic hashing functions.
+/*
+ * Copyright (C) 2020 Mike Hummel (mh@mhus.de)
  *
- * Uses hash() or mhash() if available and an internal implementation, otherwise.  Currently supports the following:
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * md2, md5, md5-96, sha1, sha1-96, sha256, sha256-96, sha384, and sha512, sha512-96
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * If {@link self::setKey() setKey()} is called, {@link self::hash() hash()} will return the HMAC as opposed to
- * the hash.  If no valid algorithm is provided, sha1 will be used.
- *
- * PHP versions 4 and 5
- *
- * {@internal The variable names are the same as those in
- * {@link http://tools.ietf.org/html/rfc2104#section-2 RFC2104}.}}
- *
- * Here's a short example of how to use this library:
- * <code>
- * <?php
- *    include 'Crypt/Hash.php';
- *
- *    $hash = new Crypt_Hash('sha1');
- *
- *    $hash->setKey('abcdefg');
- *
- *    echo base64_encode($hash->hash('abcdefg'));
- * ?>
- * </code>
- *
- * LICENSE: Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @category  Crypt
- * @package   Crypt_Hash
- * @author    Jim Wigginton <terrafrost@php.net>
- * @copyright 2007 Jim Wigginton
- * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
- * @link      http://phpseclib.sourceforge.net
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 /**#@+
  * @access private
  * @see self::Crypt_Hash()
