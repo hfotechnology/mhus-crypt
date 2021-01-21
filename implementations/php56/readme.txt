@@ -1,5 +1,5 @@
 ====
-    Copyright (C) 2020 Mike Hummel (mh@mhus.de)
+    Copyright (C) 2019 Mike Hummel (mh@mhus.de)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 ====
-
 
 docker run -d -p 11000:80 --name dev-php56 -v  .../php56:/var/www/html php:5.6-apache
 

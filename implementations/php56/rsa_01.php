@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2020 Mike Hummel (mh@mhus.de)
+ * Copyright (C) 2019 Mike Hummel (mh@mhus.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 // https://stackoverflow.com/questions/26369558/how-to-use-a-pkcs8-encoded-private-key-in-php
 // http://phpseclib.sourceforge.net/rsa/intro.html
 // http://phpseclib.sourceforge.net/rsa/examples.html#convert
