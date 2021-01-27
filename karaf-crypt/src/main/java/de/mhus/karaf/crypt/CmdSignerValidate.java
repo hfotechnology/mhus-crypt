@@ -45,38 +45,30 @@ import de.mhus.lib.core.keychain.KeychainSource;
 import de.mhus.lib.core.keychain.MKeychain;
 import de.mhus.lib.core.keychain.MKeychainUtil;
 import de.mhus.lib.core.keychain.MutableVaultSource;
-import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
-import de.mhus.lib.errors.MException;
 import de.mhus.osgi.api.MOsgi;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.crypt.api.CryptApi;
-import de.mhus.osgi.crypt.api.cipher.CipherProvider;
+import de.mhus.osgi.crypt.api.signer.SignerProvider;
 
-@Command(scope = "crypt", name = "cipher", description = "Cipher Handling")
+@Command(scope = "crypt", name = "signer", description = "Signer Handling")
 @Service
-public class CmdCipher extends AbstractCmd {
+public class CmdSignerValidate extends AbstractCmd {
 
     @Argument(
             index = 0,
-            name = "cipher",
+            name = "signer",
             required = true,
-            description = "Selected cipher",
+            description = "Selected signer",
             multiValued = false)
-    String cipher;
+    String signer;
 
     @Argument(
             index = 1,
             name = "cmd",
             required = true,
             description =
-                    "Command:\n"
-                            + " list\n"
-                            + " encrypt [key] [text]\n"
-                            + " decrypt [key] [encoded]\n"
-                            + " create\n"
-                            + " test"
-                            + " ",
+                    "Command:\n list\n create\n sign [key] [text]\n validate [key] [sign] [text]",
             multiValued = false)
     String cmd;
 
@@ -198,32 +190,16 @@ public class CmdCipher extends AbstractCmd {
     public Object execute2() throws Exception {
 
         if (cmd.equals("list")) {
-            for (MOsgi.Service<CipherProvider> ref :
-                    MOsgi.getServiceRefs(CipherProvider.class, null)) {
-                System.out.println(ref.getReference().getProperty("cipher"));
+            for (MOsgi.Service<SignerProvider> ref :
+                    MOsgi.getServiceRefs(SignerProvider.class, null)) {
+                System.out.println(ref.getReference().getProperty("signer"));
             }
             return null;
         }
 
-        CipherProvider prov = M.l(CryptApi.class).getCipher(cipher);
+        SignerProvider prov = M.l(CryptApi.class).getSigner(signer);
 
         switch (cmd) {
-            case "encrypt":
-                {
-                    String text = parameters[1];
-                    PemPub key = PemUtil.cipherPubFromString(parameters[0]);
-                    PemBlock res = prov.encrypt(key, text);
-                    if (!quiet) System.out.println(res);
-                    return res;
-                }
-            case "decrypt":
-                {
-                    PemBlock text = findEncodedBlock(parameters[1]);
-                    PemPriv key = PemUtil.cipherPrivFromString(parameters[0]);
-                    String res = prov.decrypt(key, text, passphrase);
-                    if (!quiet) System.out.println(res);
-                    return res;
-                }
             case "create":
                 {
                     if ("".equals(passphrase)) {
@@ -238,59 +214,34 @@ public class CmdCipher extends AbstractCmd {
                             return null;
                         }
                     }
-                    PemPair keys = null;
-                    PemPriv priv = null;
-                    PemPub pub = null;
 
-                    for (int i = 0; i < 10; i++) {
-                        MProperties p = IProperties.explodeToMProperties(parameters);
-                        if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
-                        keys = prov.createKeys(p);
-                        priv = keys.getPrivate();
-                        pub = keys.getPublic();
+                    MProperties p = IProperties.explodeToMProperties(parameters);
+                    if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
+                    PemPair keys = prov.createKeys(p);
+                    PemPriv priv = keys.getPrivate();
+                    PemPub pub = keys.getPublic();
 
-                        Date now = new Date();
-                        if (priv instanceof PemKey) {
-                            if (MString.isSet(desc))
-                                ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
-                            ((PemKey) priv).setDate(PemBlock.CREATED, now);
-                        }
-                        if (pub instanceof PemKey) {
-                            if (MString.isSet(desc))
-                                ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
-                            ((PemKey) pub).setDate(PemBlock.CREATED, now);
-                        }
-
-                        // test
-                        String text = Lorem.create(p.getInt("lorem", 2));
-                        PemBlock encoded = prov.encrypt(pub, text);
-                        String decoded = prov.decrypt(priv, encoded, passphrase);
-                        boolean valid = text.equals(decoded);
-                        if (valid) break;
-
-                        keys = null;
-                        priv = null;
-                        pub = null;
+                    Date now = new Date();
+                    if (priv instanceof PemKey) {
+                        if (MString.isSet(desc))
+                            ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
+                        ((PemKey) priv).setDate(PemBlock.CREATED, now);
+                    }
+                    if (pub instanceof PemKey) {
+                        if (MString.isSet(desc))
+                            ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
+                        ((PemKey) pub).setDate(PemBlock.CREATED, now);
                     }
 
-                    if (keys == null) throw new MException("can't create keys, tests failed");
-
-                    // print
-
                     if (!quiet) {
-                        if (verbose)
-                            System.out.println(
-                                    new PemKey(
-                                            (PemKey) priv,
-                                            false)); // need to create a new key without security
-                        // restriction
+                        if (verbose) System.out.println(new PemKey((PemKey) priv, false));
                         System.out.println(pub);
                         if (verbose) System.out.println("Private: " + PemUtil.toLine(priv));
                         System.out.println();
                         System.out.println("Public : " + PemUtil.toLine(pub));
                     }
 
-                    if (impPriv || impPubl) {
+                    if (impPubl || impPriv) {
                         MKeychain vault = MKeychainUtil.loadDefault();
                         KeychainSource vaultSource = vault.getSource(impSource);
                         if (vaultSource == null) {
@@ -301,15 +252,14 @@ public class CmdCipher extends AbstractCmd {
                                 DefaultEntry pubEntry =
                                         new DefaultEntry(
                                                 (UUID) pub.get(PemBlock.IDENT),
-                                                prov.getName() + MKeychain.SUFFIX_CIPHER_PUBLIC_KEY,
+                                                prov.getName() + MKeychain.SUFFIX_SIGN_PUBLIC_KEY,
                                                 name,
                                                 desc,
                                                 pub.toString());
                                 DefaultEntry privEntry =
                                         new DefaultEntry(
                                                 (UUID) priv.get(PemBlock.IDENT),
-                                                prov.getName()
-                                                        + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY,
+                                                prov.getName() + MKeychain.SUFFIX_SIGN_PRIVATE_KEY,
                                                 name,
                                                 desc,
                                                 new PemKey((PemKey) priv, false).toString());
@@ -358,41 +308,44 @@ public class CmdCipher extends AbstractCmd {
                         if (!MFile.writeFile(new File(writePriv), text))
                             System.out.println("*** Write Failed: " + writePriv);
                     }
+
                     return new Object[] {priv, pub};
+                }
+            case "sign":
+                {
+                    String text = parameters[1];
+                    PemPriv key = PemUtil.signPrivFromString(parameters[0]);
+                    PemBlock res = prov.sign(key, text, passphrase);
+                    System.out.println(res);
+                    return res;
+                }
+            case "validate":
+                {
+                    String text = parameters[2];
+                    PemPub key = PemUtil.signPubFromString(parameters[0]);
+                    PemBlock sign = findTextBlock(parameters[1]);
+
+                    boolean res = prov.validate(key, text, sign);
+                    System.out.println("Validate: " + res);
+                    return res;
                 }
             case "test":
                 {
                     MProperties p = IProperties.explodeToMProperties(parameters);
                     if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
-                    String text = p.getString("text", null);
-                    if (text == null) text = Lorem.create(p.getInt("lorem", 2));
+                    String text = Lorem.create(p.getInt("lorem", 1));
+
                     System.out.println(text);
 
                     PemPair keys = prov.createKeys(p);
                     System.out.println(keys.getPublic());
                     System.out.println(new PemKey((PemKey) keys.getPrivate(), false));
 
-                    PemKey pubKey = new PemKey(keys.getPublic());
+                    PemBlock sign = prov.sign(keys.getPrivate(), text, passphrase);
+                    System.out.println(sign);
 
-                    p.remove("text");
-                    pubKey.putAll(p); // put cmd parameters e.g. AesLength
-
-                    PemBlock encoded = prov.encrypt(pubKey, text);
-                    System.out.println(encoded);
-                    String decoded = prov.decrypt(keys.getPrivate(), encoded, passphrase);
-                    System.out.println(decoded);
-                    boolean valid = text.equals(decoded);
-                    System.out.println("Valide: " + valid);
-                    // unblowfish
-                    if (MString.isSet(passphrase)) {
-                        System.out.println();
-                        byte[] unblowfished =
-                                Blowfish.decrypt(
-                                        new PemKey((PemKey) keys.getPrivate()).getBytesBlock(),
-                                        passphrase);
-                        System.out.println("Unblowfished private key:");
-                        System.out.println(Base64.encode(unblowfished));
-                    }
+                    boolean valide = prov.validate(keys.getPublic(), text, sign);
+                    System.out.println("Valide: " + valide);
                 }
                 break;
             default:
@@ -401,9 +354,10 @@ public class CmdCipher extends AbstractCmd {
         return null;
     }
 
-    private static PemBlock findEncodedBlock(String text) throws Exception {
-
-        PemBlockModel block = new PemBlockModel().parse(text);
-        return block;
+    private PemBlock findTextBlock(String str) throws Exception {
+        if (PemUtil.isPemBlock(str)) {
+            return new PemBlockModel().parse(str);
+        }
+        return new PemBlockModel("", str);
     }
 }
