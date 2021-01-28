@@ -14,7 +14,7 @@
     limitations under the License.
 ====
 
-karaf@root()> cipher * list
+karaf@root()> cipher-list
 AES-JCE
 RSA-JCE
 RSA-BC
@@ -23,7 +23,7 @@ RSA-BC
 ==========================================================================================
 
 
-karaf@root()> cipher RSA-JCE create length=2048
+karaf@root()> cipher-create RSA-JCE length=2048
 -----START PRIVATE KEY-----
 Ident: ada728ed-3be5-4ecb-9ab7-1693627f5c35
 Format: PKCS#8
@@ -100,7 +100,7 @@ karaf@root()>
 
 
 
-karaf@root()> cipher AES-JCE create length=128
+karaf@root()> cipher-create AES-JCE length=128
 -----START PRIVATE KEY-----
 Ident: 5929238a-ede3-43eb-8634-399dfc475bd3
 Length: 128
@@ -131,7 +131,7 @@ Public : AES-JCE:RSNuTiFFMW9uV3d3OXRTSg==
 ==========================================================================================
 
 
-karaf@root()> signer * list
+karaf@root()> signer-list
 DSA-JCE
 ECC-BC
 
@@ -139,7 +139,7 @@ ECC-BC
 ==========================================================================================
 
 
-karaf@root()> signer ECC-JCE create
+karaf@root()> signer-create ECC-JCE
 -----START PRIVATE KEY-----
 Ident: fcac6a13-8bc0-4d5e-9be9-11cc32bccad1
 StdName: prime192v1

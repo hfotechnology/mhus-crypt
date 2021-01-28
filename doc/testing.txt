@@ -14,7 +14,7 @@
     limitations under the License.
 ====
 
-cipher RSA-JCE create length=2048
+cipher-create RSA-JCE-01 length=2048
 
-cipher AES-JCE test length=256
+cipher-test AES-JCE length=256
 

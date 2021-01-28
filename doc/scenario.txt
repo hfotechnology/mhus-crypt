@@ -14,7 +14,7 @@
     limitations under the License.
 ====
 
-karaf@root()> signer -i ECC-BC create
+karaf@root()> signer-create -i ECC-BC-01
 -----START PRIVATE KEY-----
 Ident: 5ac4da74-f853-4911-8138-0d27f55ce8a2
 StdName: prime192v1
@@ -50,15 +50,15 @@ IMPORTED!
 [Ident=5ac4da74-f853-4911-8138-0d27f55ce8a2, Format=PKCS#8, StdName=prime192v1, PublicKey=a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2, Method=ECC-BC, Created=Tue Jun 05 04:20:30 CEST 2018]
 [Ident=a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2, Format=X.509, StdName=prime192v1, PrivateKey=5ac4da74-f853-4911-8138-0d27f55ce8a2, Method=ECC-BC, Created=Tue Jun 05 04:20:30 CEST 2018]
 
-karaf@root()> vault list
+karaf@root()> keychain-list
 Source                                        | Id                                                                         | Type                                                         | Description                                       
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 default                                       | 5ac4da74-f853-4911-8138-0d27f55ce8a2                                       | rsa.cipher.private.key                                       |                                                   
 default                                       | a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2                                       | rsa.cipher.public.key                                        |                                                   
-karaf@root()> vault save
+karaf@root()> keychain-save
 OK
 karaf@root()> 
-karaf@root()> vault get 5ac4da74-f853-4911-8138-0d27f55ce8a2       
+karaf@root()> keychain-get 5ac4da74-f853-4911-8138-0d27f55ce8a2       
 Id         : 5ac4da74-f853-4911-8138-0d27f55ce8a2
 Type       : rsa.cipher.private.key
 Description: 
@@ -69,7 +69,7 @@ Ident: 5ac4da74-f853-4911-8138-0d27f55ce8a2
 StdName: prime192v1
 Format: PKCS#8
 PublicKey: a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2
-Method: ECC-BC
+Method: ECC-BC-01
 Created: Tue Jun 05 04:20:30 CEST 2018
 
 MHsCAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQEEYTBfAgEBBBhwIc
@@ -82,11 +82,11 @@ kJCJhAa5NF13W1fDI=
 -------
 karaf@root()> 
 
-karaf@root()> signer ECC-BC sign 5ac4da74-f853-4911-8138-0d27f55ce8a2 Hallo
+karaf@root()> signer-sign ECC-BC-01 5ac4da74-f853-4911-8138-0d27f55ce8a2 Hallo
 -----START SIGNATURE-----
 PrivateKey: 5ac4da74-f853-4911-8138-0d27f55ce8a2
 PublicKey: a18eb0c2-bac2-4662-b7bc-c78bd3e73ff2
-Method: ECC-BC
+Method: ECC-BC-01
 Created: Tue Jun 05 04:24:44 CEST 2018
 
 MDYCGQD6EEN+UYfU1mkf0S2A7JN+9ZIq2MIBh98CGQDmBRg20X
@@ -104,17 +104,17 @@ Created             Tue Jun 05 04:24:44 CEST 2018
 =============================================
 
 
-karaf@root()> cipher * list
-RSA-BC
-AES-JCE
-RSA-JCE
-karaf@root()> cipher -i RSA-JCE create
+karaf@root()> cipher-list *
+RSA-BC-01
+AES-JCE-01
+RSA-JCE-01
+karaf@root()> cipher-create -i RSA-JCE-01
 -----START PRIVATE KEY-----
 Ident: 5fe815c6-954d-4dbf-b581-4dc6e05dc17c
 Format: PKCS#8
 Length: 1024
 PublicKey: 12657d2c-b73a-4be0-a5a2-037d835697cb
-Method: RSA-JCE
+Method: RSA-JCE-01
 Created: Tue Jun 05 21:52:45 CEST 2018
 
 MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI
@@ -142,7 +142,7 @@ Ident: 12657d2c-b73a-4be0-a5a2-037d835697cb
 Format: X.509
 PrivateKey: 5fe815c6-954d-4dbf-b581-4dc6e05dc17c
 Length: 1024
-Method: RSA-JCE
+Method: RSA-JCE-01
 Created: Tue Jun 05 21:52:45 CEST 2018
 
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCIHcWLUmFJWl
@@ -153,12 +153,12 @@ JRq2SYnlL2iCes3alygcMAA6KQSKd04THvsk6UgSlSMbMDOQhL
 
 -----END PUBLIC KEY-----
 
-Private: RSA-JCE:MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIgdxYtSYUlaVCv9zYPpiybNYLv2OSXZdBHqIDaTokJ5QCtb0rj4JH8+ngBLiBv1gx1wuwkPNdjDPFfUeP/mRLe/1jjravf4FMISX/bOlhd3OqsZYlGrZJieUvaIJ6zdqXKBwwADopBIp3ThMe+yTpSBKVIxswM5CEvjeyI+AYqXAgMBAAECgYA/1a6CM0U60GjvJJ0QQyOmM+Us4UFV1dBQYntu/Pe4swJ8ExkU9BKxth0FSGbxrccqtGaSzhZTrOQM0LFaWZRZ3ZimZUZ6G1UdScArApBNz2uGiou84tfnELHJmqmG68nz8GWhfrIXx2ezPCauKMbbO6KfMmqxtGqGqeUfMRc/mQJBAPqgPXwxt/HUL+CAeA8AWv9myOyM03FXzd1Bhcl3wZkoGUTg6qQ6dKnssCMlipPFK2+viRazqYiEg4LbsbRLSksCQQCLCPRHvnT1YBNVN/h3V7Jb0ETX0JeElP4w1NnQmBFFexh3buHev3g4ff4shSqxqi+eAiD0M12YUx05YqsmMtFlAkAiRMDDd4TgQxQczVQdMP5AR8yXU5YhvFDAvRHO/1nwWCREX8CVngyPo3ZeB+cP13jd95F2EjDPItdckC+XKGhLAkAEXjymgGJWTzVsSPziavvsjIeNLD2GadPuntFVD2IDh9GF9xLbl7JkO/kfVvO3bzxdv31fjrmTDpFtex8bbR9NAkBAQWpAQ1wsYznQFBIkMlLTt/rM8C3rBwMr+eLjmX3pJFdw7BXHVtGQrTeBHgchoMSXkYJXlDQTTmdJ0vBMpx6s
+Private: RSA-JCE-01:MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIgdxYtSYUlaVCv9zYPpiybNYLv2OSXZdBHqIDaTokJ5QCtb0rj4JH8+ngBLiBv1gx1wuwkPNdjDPFfUeP/mRLe/1jjravf4FMISX/bOlhd3OqsZYlGrZJieUvaIJ6zdqXKBwwADopBIp3ThMe+yTpSBKVIxswM5CEvjeyI+AYqXAgMBAAECgYA/1a6CM0U60GjvJJ0QQyOmM+Us4UFV1dBQYntu/Pe4swJ8ExkU9BKxth0FSGbxrccqtGaSzhZTrOQM0LFaWZRZ3ZimZUZ6G1UdScArApBNz2uGiou84tfnELHJmqmG68nz8GWhfrIXx2ezPCauKMbbO6KfMmqxtGqGqeUfMRc/mQJBAPqgPXwxt/HUL+CAeA8AWv9myOyM03FXzd1Bhcl3wZkoGUTg6qQ6dKnssCMlipPFK2+viRazqYiEg4LbsbRLSksCQQCLCPRHvnT1YBNVN/h3V7Jb0ETX0JeElP4w1NnQmBFFexh3buHev3g4ff4shSqxqi+eAiD0M12YUx05YqsmMtFlAkAiRMDDd4TgQxQczVQdMP5AR8yXU5YhvFDAvRHO/1nwWCREX8CVngyPo3ZeB+cP13jd95F2EjDPItdckC+XKGhLAkAEXjymgGJWTzVsSPziavvsjIeNLD2GadPuntFVD2IDh9GF9xLbl7JkO/kfVvO3bzxdv31fjrmTDpFtex8bbR9NAkBAQWpAQ1wsYznQFBIkMlLTt/rM8C3rBwMr+eLjmX3pJFdw7BXHVtGQrTeBHgchoMSXkYJXlDQTTmdJ0vBMpx6s
 
-Public : RSA-JCE:MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCIHcWLUmFJWlQr/c2D6YsmzWC79jkl2XQR6iA2k6JCeUArW9K4+CR/Pp4AS4gb9YMdcLsJDzXYwzxX1Hj/5kS3v9Y462r3+BTCEl/2zpYXdzqrGWJRq2SYnlL2iCes3alygcMAA6KQSKd04THvsk6UgSlSMbMDOQhL43siPgGKlwIDAQAB
+Public : RSA-JCE-01:MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCIHcWLUmFJWlQr/c2D6YsmzWC79jkl2XQR6iA2k6JCeUArW9K4+CR/Pp4AS4gb9YMdcLsJDzXYwzxX1Hj/5kS3v9Y462r3+BTCEl/2zpYXdzqrGWJRq2SYnlL2iCes3alygcMAA6KQSKd04THvsk6UgSlSMbMDOQhL43siPgGKlwIDAQAB
 IMPORTED!
-[Ident=5fe815c6-954d-4dbf-b581-4dc6e05dc17c, Format=PKCS#8, Length=1024, PublicKey=12657d2c-b73a-4be0-a5a2-037d835697cb, Method=RSA-JCE, Created=Tue Jun 05 21:52:45 CEST 2018]
-[Ident=12657d2c-b73a-4be0-a5a2-037d835697cb, Format=X.509, PrivateKey=5fe815c6-954d-4dbf-b581-4dc6e05dc17c, Length=1024, Method=RSA-JCE, Created=Tue Jun 05 21:52:45 CEST 2018]
+[Ident=5fe815c6-954d-4dbf-b581-4dc6e05dc17c, Format=PKCS#8, Length=1024, PublicKey=12657d2c-b73a-4be0-a5a2-037d835697cb, Method=RSA-JCE-01, Created=Tue Jun 05 21:52:45 CEST 2018]
+[Ident=12657d2c-b73a-4be0-a5a2-037d835697cb, Format=X.509, PrivateKey=5fe815c6-954d-4dbf-b581-4dc6e05dc17c, Length=1024, Method=RSA-JCE-01, Created=Tue Jun 05 21:52:45 CEST 2018]
 
 karaf@root()> 
 
