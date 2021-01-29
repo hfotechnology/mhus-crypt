@@ -206,13 +206,11 @@ public class CmdCipherCreate extends AbstractCmd {
 
             Date now = new Date();
             if (priv instanceof PemKey) {
-                if (MString.isSet(desc))
-                    ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
+                if (MString.isSet(desc)) ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
                 ((PemKey) priv).setDate(PemBlock.CREATED, now);
             }
             if (pub instanceof PemKey) {
-                if (MString.isSet(desc))
-                    ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
+                if (MString.isSet(desc)) ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
                 ((PemKey) pub).setDate(PemBlock.CREATED, now);
             }
 
@@ -236,8 +234,7 @@ public class CmdCipherCreate extends AbstractCmd {
             if (verbose)
                 System.out.println(
                         new PemKey(
-                                (PemKey) priv,
-                                false)); // need to create a new key without security
+                                (PemKey) priv, false)); // need to create a new key without security
             // restriction
             System.out.println(pub);
             if (verbose) System.out.println("Private: " + PemUtil.toLine(priv));
@@ -263,8 +260,7 @@ public class CmdCipherCreate extends AbstractCmd {
                     DefaultEntry privEntry =
                             new DefaultEntry(
                                     (UUID) priv.get(PemBlock.IDENT),
-                                    prov.getName()
-                                            + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY,
+                                    prov.getName() + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY,
                                     name,
                                     desc,
                                     new PemKey((PemKey) priv, false).toString());
@@ -281,8 +277,7 @@ public class CmdCipherCreate extends AbstractCmd {
         }
         if (setPubl != null) session.put(setPubl, pub.toString());
 
-        if (setPriv != null)
-            session.put(setPriv, new PemKey((PemKey) priv, false).toString());
+        if (setPriv != null) session.put(setPriv, new PemKey((PemKey) priv, false).toString());
 
         if (writePubl != null)
             if (!MFile.writeFile(new File(writePubl), pub.toString()))
@@ -314,7 +309,5 @@ public class CmdCipherCreate extends AbstractCmd {
                 System.out.println("*** Write Failed: " + writePriv);
         }
         return new Object[] {priv, pub};
-
     }
-
 }

@@ -40,12 +40,7 @@ public class CmdSignerSign extends AbstractCmd {
             multiValued = false)
     String signer;
 
-    @Argument(
-            index = 1,
-            name = "key",
-            required = true,
-            description = "Key",
-            multiValued = false)
+    @Argument(index = 1, name = "key", required = true, description = "Key", multiValued = false)
     String keyA;
 
     @Argument(
@@ -74,5 +69,4 @@ public class CmdSignerSign extends AbstractCmd {
         System.out.println(res);
         return res;
     }
-
 }

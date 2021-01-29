@@ -40,12 +40,7 @@ public class CmdCipherEncrypt extends AbstractCmd {
             multiValued = false)
     String cipher;
 
-    @Argument(
-            index = 1,
-            name = "key",
-            required = true,
-            description = "Key",
-            multiValued = false)
+    @Argument(index = 1, name = "key", required = true, description = "Key", multiValued = false)
     String keyA;
 
     @Argument(
@@ -74,5 +69,4 @@ public class CmdCipherEncrypt extends AbstractCmd {
         if (!quiet) System.out.println(res);
         return res;
     }
-
 }

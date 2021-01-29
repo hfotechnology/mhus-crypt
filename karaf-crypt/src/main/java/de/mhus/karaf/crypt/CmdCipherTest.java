@@ -93,13 +93,11 @@ public class CmdCipherTest extends AbstractCmd {
             System.out.println();
             byte[] unblowfished =
                     Blowfish.decrypt(
-                            new PemKey((PemKey) keys.getPrivate()).getBytesBlock(),
-                            passphrase);
+                            new PemKey((PemKey) keys.getPrivate()).getBytesBlock(), passphrase);
             System.out.println("Unblowfished private key:");
             System.out.println(Base64.encode(unblowfished));
         }
 
         return null;
     }
-
 }

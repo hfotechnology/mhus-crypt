@@ -200,13 +200,11 @@ public class CmdSignerCreate extends AbstractCmd {
 
         Date now = new Date();
         if (priv instanceof PemKey) {
-            if (MString.isSet(desc))
-                ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
+            if (MString.isSet(desc)) ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
             ((PemKey) priv).setDate(PemBlock.CREATED, now);
         }
         if (pub instanceof PemKey) {
-            if (MString.isSet(desc))
-                ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
+            if (MString.isSet(desc)) ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
             ((PemKey) pub).setDate(PemBlock.CREATED, now);
         }
 
@@ -253,8 +251,7 @@ public class CmdSignerCreate extends AbstractCmd {
         }
         if (setPubl != null) session.put(setPubl, pub.toString());
 
-        if (setPriv != null)
-            session.put(setPriv, new PemKey((PemKey) priv, false).toString());
+        if (setPriv != null) session.put(setPriv, new PemKey((PemKey) priv, false).toString());
 
         if (writePubl != null)
             if (!MFile.writeFile(new File(writePubl), pub.toString()))
@@ -287,7 +284,5 @@ public class CmdSignerCreate extends AbstractCmd {
         }
 
         return new Object[] {priv, pub};
-
     }
-
 }

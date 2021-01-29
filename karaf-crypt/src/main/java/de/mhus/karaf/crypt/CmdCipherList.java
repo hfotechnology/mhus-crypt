@@ -29,8 +29,7 @@ public class CmdCipherList extends AbstractCmd {
     @Override
     public Object execute2() throws Exception {
 
-        for (MOsgi.Service<CipherProvider> ref :
-                MOsgi.getServiceRefs(CipherProvider.class, null)) {
+        for (MOsgi.Service<CipherProvider> ref : MOsgi.getServiceRefs(CipherProvider.class, null)) {
             System.out.println(ref.getReference().getProperty("cipher"));
         }
 

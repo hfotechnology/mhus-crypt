@@ -58,7 +58,7 @@ public class CmdSignerTest extends AbstractCmd {
             required = false,
             multiValued = false)
     String passphrase = null;
-    
+
     @Override
     public Object execute2() throws Exception {
 
@@ -82,5 +82,4 @@ public class CmdSignerTest extends AbstractCmd {
 
         return null;
     }
-
 }

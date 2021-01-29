@@ -29,12 +29,9 @@ public class CmdSignerList extends AbstractCmd {
     @Override
     public Object execute2() throws Exception {
 
-        for (MOsgi.Service<SignerProvider> ref :
-                MOsgi.getServiceRefs(SignerProvider.class, null)) {
+        for (MOsgi.Service<SignerProvider> ref : MOsgi.getServiceRefs(SignerProvider.class, null)) {
             System.out.println(ref.getReference().getProperty("signer"));
         }
         return null;
-
     }
-
 }
