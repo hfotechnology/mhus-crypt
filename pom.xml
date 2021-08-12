@@ -29,7 +29,7 @@
 	<packaging>pom</packaging>
 	<name>MHUS OSGi Tools</name>
 	<description>A set of tools to provide crypt mechanisms to different frameworks</description>
-	<url>http://www.mhus.de</url>
+	<url>http://www.mhus.info</url>
     <properties>
         <mhus-crypt.version>${project.version}</mhus-crypt.version>
     </properties>
@@ -50,7 +50,7 @@
 			<id>mhu</id>
 			<name>Mike Hummel</name>
 			<email>mh@mhus.de</email>
-			<url>http://www.mhus.info</url>
+			<url>http://www.mhus.de</url>
 		</developer>
 	</developers>
 
