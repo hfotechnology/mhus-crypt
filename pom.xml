@@ -43,14 +43,14 @@
 	</licenses>
 	<scm>
 		<url>https://github.com/mhus/mhus-osgi-crypt</url>
-		<connection>scm:git:https://github.com/mhus/mhus-osgi-crypt/</connection>
+		<connection>scm:git:https://github.com/mhus-info/mhus-osgi-crypt/</connection>
 	</scm>
 	<developers>
 		<developer>
 			<id>mhu</id>
 			<name>Mike Hummel</name>
 			<email>mh@mhus.de</email>
-			<url>http://www.mhus.de</url>
+			<url>http://www.mhus.info</url>
 		</developer>
 	</developers>
 
