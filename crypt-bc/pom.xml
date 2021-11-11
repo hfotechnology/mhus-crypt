@@ -24,7 +24,7 @@
 	<description>bouncecastle Encryption</description>
 	<parent>
 		<groupId>de.mhus.crypt</groupId>
-		<version>7.5.0-SNAPSHOT</version>
+		<version>7.5.0</version>
 		<artifactId>mhus-crypt</artifactId>
 	</parent>
 
