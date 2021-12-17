@@ -15,10 +15,6 @@
  */
 package de.mhus.crypt.karaf;
 
-import java.io.File;
-import java.util.Date;
-import java.util.UUID;
-
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
@@ -28,7 +24,6 @@ import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.Console;
@@ -36,21 +31,13 @@ import de.mhus.lib.core.crypt.Blowfish;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemKey;
 import de.mhus.lib.core.crypt.pem.PemPair;
-import de.mhus.lib.core.crypt.pem.PemPriv;
-import de.mhus.lib.core.crypt.pem.PemPub;
-import de.mhus.lib.core.crypt.pem.PemUtil;
-import de.mhus.lib.core.keychain.DefaultEntry;
-import de.mhus.lib.core.keychain.KeychainSource;
-import de.mhus.lib.core.keychain.MKeychain;
-import de.mhus.lib.core.keychain.MKeychainUtil;
-import de.mhus.lib.core.keychain.MutableVaultSource;
+import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
-import de.mhus.lib.errors.MException;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.crypt.api.CryptApi;
 import de.mhus.crypt.api.cipher.CipherProvider;
 
-@Command(scope = "crypt", name = "cipher-create", description = "Cipher create keys")
+@Command(scope = "crypt", name = "cipher-create", description = "Create cipher keys and test it")
 @Service
 public class CmdCipherCreate extends AbstractCmd {
 
@@ -71,46 +58,6 @@ public class CmdCipherCreate extends AbstractCmd {
     String[] parameters;
 
     @Option(
-            name = "-ip",
-            aliases = {"--importPublic"},
-            description = "Import Public Key into vault (don't forget to save vault)",
-            required = false,
-            multiValued = false)
-    boolean impPubl = false;
-
-    @Option(
-            name = "-is",
-            aliases = {"--importSecret"},
-            description = "Import Private Key into vault (don't forget to save vault)",
-            required = false,
-            multiValued = false)
-    boolean impPriv = false;
-
-    @Option(
-            name = "-s",
-            aliases = {"--source"},
-            description = "Define vault source other then 'default'",
-            required = false,
-            multiValued = false)
-    String impSource = "default";
-
-    @Option(
-            name = "-d",
-            aliases = {"--description"},
-            description = "Descritpion of the key",
-            required = false,
-            multiValued = false)
-    String desc = "";
-
-    @Option(
-            name = "-n",
-            aliases = {"--name"},
-            description = "Name of the key",
-            required = false,
-            multiValued = false)
-    String name = "";
-
-    @Option(
             name = "-p",
             aliases = {"--passphrase"},
             description = "Define a passphrase if required",
@@ -119,62 +66,14 @@ public class CmdCipherCreate extends AbstractCmd {
     String passphrase = null;
 
     @Option(
-            name = "-sp",
-            aliases = {"--setPublic"},
-            description = "Set Public Key into shell property",
+            name = "-s",
+            aliases = {"--set"},
+            description = "Set session variables <set>Passphrase, <set>PrivateKey and <set>PublicKey",
             required = false,
             multiValued = false)
-    String setPubl;
-
-    @Option(
-            name = "-ss",
-            aliases = {"--setSecret"},
-            description = "Set Private Key into shell property",
-            required = false,
-            multiValued = false)
-    String setPriv;
-
-    @Option(
-            name = "-wp",
-            aliases = {"--writePublic"},
-            description = "Write Public Key to file",
-            required = false,
-            multiValued = false)
-    String writePubl;
-
-    @Option(
-            name = "-ws",
-            aliases = {"--writeSecret"},
-            description = "Write Private Key tofile",
-            required = false,
-            multiValued = false)
-    String writePriv;
-
-    @Option(
-            name = "-wsp",
-            aliases = {"--writeSecretPassphrase"},
-            description = "Set a extra passphrase for the secret key file",
-            required = false,
-            multiValued = false)
-    String writePrivPassphrase = null;
-
-    @Option(
-            name = "-q",
-            aliases = {"--quiet"},
-            description = "Quiet mode",
-            required = false,
-            multiValued = false)
-    boolean quiet = false;
-
-    @Option(
-            name = "-v",
-            aliases = {"--verbose"},
-            description = "Verbose will also print private key",
-            required = false,
-            multiValued = false)
-    boolean verbose = false;
-
-    @Reference private Session session;
+    String set = null;
+    
+    @Reference Session session;
 
     @Override
     public Object execute2() throws Exception {
@@ -193,121 +92,44 @@ public class CmdCipherCreate extends AbstractCmd {
                 return null;
             }
         }
-        PemPair keys = null;
-        PemPriv priv = null;
-        PemPub pub = null;
 
-        for (int i = 0; i < 10; i++) {
-            MProperties p = IProperties.explodeToMProperties(parameters);
-            if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
-            keys = prov.createKeys(p);
-            priv = keys.getPrivate();
-            pub = keys.getPublic();
+        MProperties p = IProperties.explodeToMProperties(parameters);
+        if (passphrase != null) p.setString(CryptApi.PASSPHRASE, passphrase);
+        String text = p.getString("text", null);
+        if (text == null) text = Lorem.create(p.getInt("lorem", 2));
+        System.out.println(text);
 
-            Date now = new Date();
-            if (priv instanceof PemKey) {
-                if (MString.isSet(desc)) ((PemKey) priv).setString(PemBlock.DESCRIPTION, desc);
-                ((PemKey) priv).setDate(PemBlock.CREATED, now);
-            }
-            if (pub instanceof PemKey) {
-                if (MString.isSet(desc)) ((PemKey) pub).setString(PemBlock.DESCRIPTION, desc);
-                ((PemKey) pub).setDate(PemBlock.CREATED, now);
-            }
+        PemPair keys = prov.createKeys(p);
+        System.out.println(keys.getPublic());
+        System.out.println(new PemKey((PemKey) keys.getPrivate(), false));
 
-            // test
-            String text = Lorem.create(p.getInt("lorem", 2));
-            PemBlock encoded = prov.encrypt(pub, text);
-            String decoded = prov.decrypt(priv, encoded, passphrase);
-            boolean valid = text.equals(decoded);
-            if (valid) break;
+        PemKey pubKey = new PemKey(keys.getPublic());
 
-            keys = null;
-            priv = null;
-            pub = null;
-        }
+        p.remove("text");
+        pubKey.putAll(p); // put cmd parameters e.g. AesLength
 
-        if (keys == null) throw new MException("can't create keys, tests failed");
-
-        // print
-
-        if (!quiet) {
-            if (verbose)
-                System.out.println(
-                        new PemKey(
-                                (PemKey) priv, false)); // need to create a new key without security
-            // restriction
-            System.out.println(pub);
-            if (verbose) System.out.println("Private: " + PemUtil.toLine(priv));
+        PemBlock encoded = prov.encrypt(pubKey, text);
+        System.out.println(encoded);
+        String decoded = prov.decrypt(keys.getPrivate(), encoded, passphrase);
+        System.out.println(decoded);
+        boolean valid = text.equals(decoded);
+        System.out.println("Valide: " + valid);
+        // unblowfish
+        if (MString.isSet(passphrase)) {
             System.out.println();
-            System.out.println("Public : " + PemUtil.toLine(pub));
+            byte[] unblowfished =
+                    Blowfish.decrypt(
+                            new PemKey((PemKey) keys.getPrivate()).getBytesBlock(), passphrase);
+            System.out.println("Unblowfished private key:");
+            System.out.println(Base64.encode(unblowfished));
+        }
+        
+        if (set != null) {
+            session.put(set + "PublicKey", keys.getPublic());
+            session.put(set + "PrivateKey", new PemKey((PemKey) keys.getPrivate(), false));
+            session.put(set + "Passphrase", passphrase);
         }
 
-        if (impPriv || impPubl) {
-            MKeychain vault = MKeychainUtil.loadDefault();
-            KeychainSource vaultSource = vault.getSource(impSource);
-            if (vaultSource == null) {
-                System.out.println("Vault Source not found " + impSource);
-            } else {
-                if (vaultSource instanceof MutableVaultSource) {
-
-                    DefaultEntry pubEntry =
-                            new DefaultEntry(
-                                    (UUID) pub.get(PemBlock.IDENT),
-                                    prov.getName() + MKeychain.SUFFIX_CIPHER_PUBLIC_KEY,
-                                    name,
-                                    desc,
-                                    pub.toString());
-                    DefaultEntry privEntry =
-                            new DefaultEntry(
-                                    (UUID) priv.get(PemBlock.IDENT),
-                                    prov.getName() + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY,
-                                    name,
-                                    desc,
-                                    new PemKey((PemKey) priv, false).toString());
-
-                    MutableVaultSource mvs = (MutableVaultSource) vaultSource;
-                    if (impPubl) mvs.addEntry(pubEntry);
-                    if (impPriv) mvs.addEntry(privEntry);
-
-                    System.out.println("IMPORTED!");
-                } else {
-                    System.out.println("Vault source is not writable " + impSource);
-                }
-            }
-        }
-        if (setPubl != null) session.put(setPubl, pub.toString());
-
-        if (setPriv != null) session.put(setPriv, new PemKey((PemKey) priv, false).toString());
-
-        if (writePubl != null)
-            if (!MFile.writeFile(new File(writePubl), pub.toString()))
-                System.out.println("*** Write Failed: " + writePubl);
-
-        if (writePriv != null) {
-            String text = new PemKey((PemKey) priv, false).toString();
-            if (writePrivPassphrase != null) {
-                if (writePrivPassphrase.length() == 0) {
-                    System.out.print("WS Passphrase: ");
-                    System.out.flush();
-                    writePrivPassphrase = Console.get().readPassword();
-                    System.out.print("WS Verify: ");
-                    System.out.flush();
-                    String verify = Console.get().readPassword();
-                    if (!writePrivPassphrase.equals(verify)) {
-                        System.out.println("Not the same - failed");
-                        return null;
-                    }
-                }
-                text =
-                        "-----BEGIN CIPHER-----\nIdent: "
-                                + priv.getString(PemBlock.IDENT)
-                                + "\n\n"
-                                + Blowfish.encrypt(text, writePrivPassphrase)
-                                + "\n-----END CIPHER-----";
-            }
-            if (!MFile.writeFile(new File(writePriv), text))
-                System.out.println("*** Write Failed: " + writePriv);
-        }
-        return new Object[] {priv, pub};
+        return null;
     }
 }
