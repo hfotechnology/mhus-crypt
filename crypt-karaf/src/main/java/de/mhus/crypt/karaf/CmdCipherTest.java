@@ -18,7 +18,9 @@ package de.mhus.crypt.karaf;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
+import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
@@ -62,6 +64,16 @@ public class CmdCipherTest extends AbstractCmd {
             multiValued = false)
     String passphrase = null;
 
+    @Option(
+            name = "-s",
+            aliases = {"--set"},
+            description = "Set session variables passphrase, privateKey and publicKey",
+            required = false,
+            multiValued = false)
+    boolean set = false;
+    
+    @Reference Session session;
+
     @Override
     public Object execute2() throws Exception {
 
@@ -96,6 +108,12 @@ public class CmdCipherTest extends AbstractCmd {
                             new PemKey((PemKey) keys.getPrivate()).getBytesBlock(), passphrase);
             System.out.println("Unblowfished private key:");
             System.out.println(Base64.encode(unblowfished));
+        }
+        
+        if (set) {
+            session.put("publicKey", keys.getPublic());
+            session.put("privateKey", new PemKey((PemKey) keys.getPrivate(), false));
+            session.put("passphrase", passphrase);
         }
 
         return null;
