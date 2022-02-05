@@ -30,6 +30,8 @@ import org.osgi.service.component.ComponentContext;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
@@ -87,7 +89,7 @@ public class EccSigner extends MLog implements SignerProvider {
 
             return out;
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 
@@ -109,7 +111,7 @@ public class EccSigner extends MLog implements SignerProvider {
             return sig.verify(sigToVerify);
 
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 
@@ -178,7 +180,7 @@ public class EccSigner extends MLog implements SignerProvider {
             return new PemKeyPair(xpriv, xpub);
 
         } catch (Throwable t) {
-            throw new MException(t);
+            throw new MException(RC.ERROR, t);
         }
     }
 }

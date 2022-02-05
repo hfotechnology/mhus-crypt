@@ -21,6 +21,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.osgi.service.component.annotations.Component;
+
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
@@ -58,7 +60,7 @@ public class JavaAesCipher extends MLog implements CipherProvider {
 
             return out;
         } catch (Throwable t) {
-            throw new MException(t);
+            throw new MException(RC.ERROR, t);
         }
     }
 
@@ -76,7 +78,7 @@ public class JavaAesCipher extends MLog implements CipherProvider {
             return new String(enc, stringEncoding);
 
         } catch (Throwable t) {
-            throw new MException(t);
+            throw new MException(RC.ERROR, t);
         }
     }
 

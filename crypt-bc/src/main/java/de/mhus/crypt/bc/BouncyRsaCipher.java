@@ -31,6 +31,8 @@ import org.osgi.service.component.ComponentContext;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
@@ -99,7 +101,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
             return out;
 
         } catch (Throwable t) {
-            throw new MException(t);
+            throw new MException(RC.ERROR, t);
         }
     }
 
@@ -133,7 +135,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
             return new String(os.toByteArray(), stringEncoding);
 
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 
@@ -182,7 +184,7 @@ public class BouncyRsaCipher extends MLog implements CipherProvider {
             return new PemKeyPair(xpriv, xpub);
 
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 }

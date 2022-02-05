@@ -31,6 +31,8 @@ import org.osgi.service.component.ComponentContext;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
@@ -76,7 +78,7 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
             // prepare AES key
             int aesLength = key.getInt("AesLength", 128);
             if (aesLength != 128 && aesLength != 256) {
-                throw new MException("AES length not valid, use 128 or 256", aesLength);
+                throw new MException(RC.USAGE, "AES length {1} not valid, use 128 or 256", aesLength);
             }
             int aesSize = aesLength == 128 ? 16 : 32;
             byte[] aesKey = new byte[aesSize];
@@ -112,7 +114,7 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 
         } catch (Throwable t) {
             if (t instanceof MException) throw (MException) t;
-            throw new MException(t);
+            throw new MException(RC.ERROR, t);
         }
     }
 
@@ -145,7 +147,7 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
 
         } catch (Exception e) {
             if (e instanceof MException) throw (MException) e;
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 
@@ -194,7 +196,7 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
             return new PemKeyPair(xpriv, xpub);
 
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 }

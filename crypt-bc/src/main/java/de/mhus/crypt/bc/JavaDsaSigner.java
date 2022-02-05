@@ -26,6 +26,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.UUID;
 
 import org.osgi.service.component.annotations.Component;
+
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
@@ -73,7 +75,7 @@ public class JavaDsaSigner extends MLog implements SignerProvider {
 
             return out;
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 
@@ -95,7 +97,7 @@ public class JavaDsaSigner extends MLog implements SignerProvider {
             return sig.verify(sigToVerify);
 
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 
@@ -145,7 +147,7 @@ public class JavaDsaSigner extends MLog implements SignerProvider {
             return new PemKeyPair(xpriv, xpub);
 
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.ERROR, e);
         }
     }
 }
