@@ -65,11 +65,12 @@ public class CmdSignerCreate extends AbstractCmd {
     @Option(
             name = "-s",
             aliases = {"--set"},
-            description = "Set session variables <set>Passphrase, <set>PrivateKey and <set>PublicKey",
+            description =
+                    "Set session variables <set>Passphrase, <set>PrivateKey and <set>PublicKey",
             required = false,
             multiValued = false)
     String set = null;
-    
+
     @Reference Session session;
 
     @Override

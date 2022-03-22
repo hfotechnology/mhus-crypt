@@ -78,7 +78,8 @@ public class BouncyAesWithRsaCipher extends MLog implements CipherProvider {
             // prepare AES key
             int aesLength = key.getInt("AesLength", 128);
             if (aesLength != 128 && aesLength != 256) {
-                throw new MException(RC.USAGE, "AES length {1} not valid, use 128 or 256", aesLength);
+                throw new MException(
+                        RC.USAGE, "AES length {1} not valid, use 128 or 256", aesLength);
             }
             int aesSize = aesLength == 128 ? 16 : 32;
             byte[] aesKey = new byte[aesSize];

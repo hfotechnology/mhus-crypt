@@ -68,11 +68,12 @@ public class CmdCipherCreate extends AbstractCmd {
     @Option(
             name = "-s",
             aliases = {"--set"},
-            description = "Set session variables <set>Passphrase, <set>PrivateKey and <set>PublicKey",
+            description =
+                    "Set session variables <set>Passphrase, <set>PrivateKey and <set>PublicKey",
             required = false,
             multiValued = false)
     String set = null;
-    
+
     @Reference Session session;
 
     @Override
@@ -123,7 +124,7 @@ public class CmdCipherCreate extends AbstractCmd {
             System.out.println("Unblowfished private key:");
             System.out.println(Base64.encode(unblowfished));
         }
-        
+
         if (set != null) {
             session.put(set + "PublicKey", keys.getPublic());
             session.put(set + "PrivateKey", new PemKey((PemKey) keys.getPrivate(), false));
